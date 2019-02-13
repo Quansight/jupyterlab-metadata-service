@@ -8,16 +8,6 @@ const Dataset = require('./schemas/dataset');
 const Person = require('./schemas/person');
 const Organization = require('./schemas/organization');
 
-const Query = gql`
-  type Query {
-    _empty: String
-  }
-
-  type Mutation {
-    _empty: String
-  }
-`;
-
 const resolvers = {
   Query: { },
   Mutation: { },
