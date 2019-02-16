@@ -1,28 +1,43 @@
 const {
-  graphql,
   GraphQLSchema,
   GraphQLObjectType,
-  GraphQLString
+  GraphQLBoolean
 } = require('graphql');
 
 
-var Query = new graphql.GraphQLObjectType({
+var Query = new GraphQLObjectType({
   name: 'Query',
   fields: {
-    _empty: String
+    _empty: {
+      type: GraphQLBoolean
+    }
   }
 });
 
-var Mutation = new graphql.GraphQLObjectType({
+var Mutation = new GraphQLObjectType({
   name: 'Mutation',
   fields: {
-    _empty: String
+    _empty: {
+      type: GraphQLBoolean
+    }
   }
 });
 
-var typeDef = new graphql.GraphQLSchema({
-  query: Query,
-  mutation: Mutation
-});
+var typeDef = JSON.stringify(
+  new GraphQLSchema({
+    query: Query,
+    mutation: Mutation
+  })
+);
 
+const resolvers = {
+  Query: { },
+  Mutation: { },
+};
 
+module.exports = {
+  typeDef,
+  resolvers,
+  Query,
+  Mutation
+};
