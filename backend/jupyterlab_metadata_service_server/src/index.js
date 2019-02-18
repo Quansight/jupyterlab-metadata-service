@@ -3,20 +3,20 @@ const { ApolloServer } = require('apollo-server');
 const Schema = require('./schema');
 
 // set up any dataSources our resolvers need
-const AnnotationAPI = require('./datasources/annotation')
-const CreativeWorkAPI = require('./datasources/creative_work');
+// const AnnotationAPI = require('./datasources/annotation')
+// const CreativeWorkAPI = require('./datasources/creative_work');
 const DataCatalogAPI = require('./datasources/data_catalog')
-const DatasetAPI = require('./datasources/dataset');
-const OrganizationAPI = require('./datasources/organization');
-const PersonAPI = require('./datasources/person');
+// const DatasetAPI = require('./datasources/dataset');
+// const OrganizationAPI = require('./datasources/organization');
+// const PersonAPI = require('./datasources/person');
 
 const dataSources = () => ({
-  AnnotationAPI: new AnnotationAPI(),
-  CreativeWorkAPI: new CreativeWorkAPI(),
+  // AnnotationAPI: new AnnotationAPI(),
+  // CreativeWorkAPI: new CreativeWorkAPI(),
   DataCatalogAPI: new DataCatalogAPI(),
-  DatasetAPI: new DatasetAPI(),
-  OrganizationAPI: new OrganizationAPI(),
-  PersonAPI: new PersonAPI(),
+  // DatasetAPI: new DatasetAPI(),
+  // OrganizationAPI: new OrganizationAPI(),
+  // PersonAPI: new PersonAPI(),
 });
 
 let args = process.argv.slice(2);

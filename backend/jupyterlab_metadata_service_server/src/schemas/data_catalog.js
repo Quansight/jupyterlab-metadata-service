@@ -1,45 +1,49 @@
 const {
   graphql,
   GraphQLSchema,
+  GraphQLList,
   GraphQLObjectType,
-  GraphQLString
+  GraphQLString,
+  GraphQLBoolean
 } = require('graphql');
 
 const { extendSchema } = require('graphql/utilities');
 
 const { DataCatalog } = require('graphql-schema-org');
 
-const { Query } = require('./main')
-
-// Define the Query type
-var DataCatalogQuery = new graphql.GraphQLObjectType({
-  name: 'Query',
-  types: [DataCatalog],
-  fields: {
-    dataCatalogs: {
-      type: DataCatalogs
-    },
-    dataCatalog: {
-      type: DataCatalog,
-      args: {
-        id: { type: graphql.GraphQLString }
-      }
-    }
-  }
+const DataCatalogResponse = new GraphQLObjectType({
+  name: 'DataCatalogResponse',
+  fields: () => ({
+    success: { type: GraphQLBoolean },
+    message: { type: GraphQLString },
+    result: { type: DataCatalog }
+  })
 });
 
-
-const resolvers = {
-  Query: {
-    dataCatalogs: (root, args, { dataSources } ) => {
+// Define the Query type
+var query = {
+  dataCatalogs: {
+    type: new GraphQLList(DataCatalog),
+    resolve: (root, args, { dataSources } ) => {
       return dataSources.DataCatalogAPI.fetchall();
-    },
-    dataCatalog: (root, args, { dataSources } ) => {
+    }
+  },
+  dataCatalog: {
+    type: DataCatalog,
+    resolve: (root, args, { dataSources } ) => {
       return dataSources.DataCatalogAPI.getByID(args.id);
     }
   },
-  Mutation: {
-    addDataCatalog: async (root, args, { dataSources }) => {
+};
+
+
+var mutation = {
+  addDataCatalog: {
+    type: DataCatalogResponse,
+    args: {
+      id: { type: GraphQLString }
+    },
+    resolve: async (root, args, { dataSources }) => {
       let newData = {
         name: args.name
       };
@@ -51,26 +55,27 @@ const resolvers = {
         message: null,
         result: newData
       };
+    }
+  },
+  remDataCatalog: {
+    type: DataCatalogResponse,
+    args: {
+      id: { type: GraphQLString }
     },
-    remDataCatalog: (root, args, { dataSources }) => {
-      let message = null;
-      let status = true;
-      const result = dataSources.DataCatalogAPI.deleteByID(args.id);
+    resolve: async (root, args, { dataSources }) => {
+      let newData = {
+        name: args.name
+      };
 
-      if (result == null) {
-        message = 'Data not found.';
-        status = false;
-      }
+      newData = dataSources.DataCatalogAPI.insert(newData);
 
       return {
-        success: status,
-        result: result,
-        message: message
+        success: true,
+        message: null,
+        result: newData
       };
     }
-  }
+  },
 };
 
-const typeDef = extendSchema(Query, parse(DataCatalogQuery));
-
-module.exports = { typeDef, resolvers };
+module.exports = { query, mutation };

@@ -2,29 +2,30 @@ const { gql, makeExecutableSchema } = require('apollo-server');
 const { merge } = require('lodash');
 
 // schemas
-const Main = require('./schemas/main');
 
-const Annotation = require('./schemas/annotation');
-const CreativeWork = require('./schemas/creative_work');
-const Dataset = require('./schemas/dataset');
-const Person = require('./schemas/person');
-const Organization = require('./schemas/organization');
+// const Annotation = require('./schemas/annotation');
+// const CreativeWork = require('./schemas/creative_work');
+const DataCatalog = require('./schemas/data_catalog');
+// const Dataset = require('./schemas/dataset');
+// const Person = require('./schemas/person');
+// const Organization = require('./schemas/organization');
 
-module.exports = makeExecutableSchema({
-  typeDefs: [
-    Main.typeDef,
-    Annotation.typeDef,
-    CreativeWork.typeDef,
-    Dataset.typeDef,
-    Person.typeDef,
-    Organization.typeDef
-  ],
-  resolvers: merge(
-    Main.resolvers,
-    Annotation.resolvers,
-    CreativeWork.resolvers,
-    Dataset.resolvers,
-    Person.resolvers,
-    Organization.resolvers
-  ),
+const RootQuery = new GraphQLObjectType({
+  name: 'RootQueryType',
+  fields: {
+    ...DataCatalog.query,
+  }
+});
+
+const Mutation = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    ...DataCatalog.mutation
+  }
+});
+
+
+module.exports = new GraphQLSchema({
+  query: RootQuery,
+  mutation: Mutation
 });
