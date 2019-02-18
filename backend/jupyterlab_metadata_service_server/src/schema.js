@@ -1,4 +1,5 @@
 const { gql, makeExecutableSchema } = require('apollo-server');
+const { GraphQLObjectType, GraphQLSchema } = require('graphql');
 const { merge } = require('lodash');
 
 // schemas
