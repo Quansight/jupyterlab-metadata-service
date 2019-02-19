@@ -22,6 +22,9 @@ const dataSources = () => ({
 let args = process.argv.slice(2);
 let port = args.length > 0 ? args[0] : 4000;
 
+console.log(Schema._typeMap.DataCatalog);
+console.log(Schema._typeMap);
+
 const server = new ApolloServer({
   schema: Schema,
   dataSources: dataSources,

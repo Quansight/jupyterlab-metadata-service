@@ -1,43 +1,7 @@
 const { DataSource } = require('apollo-datasource');
 
-let store = [{
-  id: 'dataset/1',
-  author: {
-    id: 'person/1',
-    name: 'Igor Derke',
-    image: 'https://media.licdn.com/dms/image/C4E03AQHzafiGiPqMUw/profile-displayphoto-shrink_800_800/0?e=1554336000&v=beta&t=PHPBXy0BCT113x_u2qIVjyVUAjVy1bqE1G7mcoCYJ94'
-  },
-  copyrightHolder: {
-    id: 'person/1',
-    name: 'Igor Derke',
-    image: 'https://media.licdn.com/dms/image/C4E03AQHzafiGiPqMUw/profile-displayphoto-shrink_800_800/0?e=1554336000&v=beta&t=PHPBXy0BCT113x_u2qIVjyVUAjVy1bqE1G7mcoCYJ94'
-  },
-  copyrightYear: 2019,
-  creator: {
-    id: 'person/1',
-    name: 'Igor Derke',
-    image: 'https://media.licdn.com/dms/image/C4E03AQHzafiGiPqMUw/profile-displayphoto-shrink_800_800/0?e=1554336000&v=beta&t=PHPBXy0BCT113x_u2qIVjyVUAjVy1bqE1G7mcoCYJ94'
-  },
-  dateCreated: '2015-10-13T13:00:00Z',
-  dateModified: '2015-10-13T13:00:00Z',
-  datePublished: '2015-10-13T13:00:00Z',
-  exampleOfWork: {
-    id: 'creative_work/1',
-    name: 'Hello world'
-  },
-  license: 'https://opensource.org/licenses/BSD-3-Clause',
-  name: 'quansight-web-page',
-  provider: {
-    id: 'organization/1',
-    name: 'Quansight'
-  },
-  publisher: {
-    id: 'organization/1',
-    name: 'Quansight'
-  },
-  url: 'https://www.quansight.com/'
-}];
-let nextId = 2;
+let store = require('data/dataset.json');
+let nextId = store.length + 1;
 
 class DatasetAPI extends DataSource {
   constructor() {
