@@ -30,7 +30,7 @@ export default class Header extends React.Component<IHeaderProps> {
    */
   render() {
     return (
-      <div style={this.styles.headercard}>
+      <div style={this.styles['jp-metadata-header-card']}>
         {this.renderAppHeader(this.props.targetName)}
       </div>
     );
@@ -43,12 +43,16 @@ export default class Header extends React.Component<IHeaderProps> {
       extraStyle.color = 'var(--jp-ui-font-color2)';
     }
     return (
-      <span style={{ ...this.styles.header, ...extraStyle }}>
-        {this.props.targetName !== '' && this.getFileIcon(header)}
-        <span style={this.styles.headerLabel}>
-          {hasName ? header : 'Select a file to view metadata'}
-        </span>
-      </span>
+      <div style={{ ...this.styles['jp-metadata-header-area'], ...extraStyle }}>
+        <div style={this.styles['jp-metadata-header-icon-area']}>
+          {this.props.targetName !== '' && this.getFileIcon(header)}
+        </div>
+        <div style={this.styles['jp-metadata-header-label-area']}>
+          <label style={this.styles['jp-metadata-header-label']}>
+            {hasName ? header : 'Select a file to view metadata'}
+          </label>
+        </div>
+      </div>
     );
   }
 
@@ -61,13 +65,18 @@ export default class Header extends React.Component<IHeaderProps> {
             return (
               <span
                 className={this.fileTypes[key].iconClass}
-                style={this.styles.headerIcon}
+                style={this.styles['jp-metadata-header-icon']}
               />
             );
           }
         }
       }
-      return <span className={'jp-FileIcon'} style={this.styles.headerIcon} />;
+      return (
+        <span
+          className={'jp-FileIcon'}
+          style={this.styles['jp-metadata-header-icon']}
+        />
+      );
     } catch {
       return <span />;
     }
@@ -142,38 +151,33 @@ export default class Header extends React.Component<IHeaderProps> {
   ];
 
   styles = {
-    headercard: {
+    'jp-metadata-header-card': {
+      padding: '4px'
+    },
+    'jp-metadata-header-area': {
       display: 'flex',
-      justifyContent: 'left',
-      paddingLeft: '32px',
-      paddingRight: '12px',
-      paddingTop: '4px',
-      paddingBottom: '4px'
+      flexShrink: 1,
+      flexDirection: 'row' as 'row',
+      paddingLeft: '24px',
+      minWidth: '52px'
     },
-    emptyHeader: {
-      background: 'white',
-      color: '#4F4F4F',
-      marginTop: '16px',
-      marginBottom: '16px'
-    },
-    header: {
-      display: 'flex',
-      flexDirection: 'row' as 'row'
-    },
-    headerLabel: {
+    'jp-metadata-header-label-area': {
       paddingLeft: '4px',
       textAlign: 'left' as 'left',
       whiteSpace: 'nowrap' as 'nowrap',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
-      fontSize: 'var(--jp-ui-font-size1)',
       flexShrink: 1
     },
-    headerIcon: {
+    'jp-metadata-header-label': {
+      fontSize: 'var(--jp-ui-font-size1)',
+      color: 'var(--jp-ui-font-color1)'
+    },
+    'jp-metadata-header-icon-area': { display: 'flex', paddingLeft: '4px' },
+    'jp-metadata-header-icon': {
       minWidth: '20px',
       minHeight: '20px',
       backgroundSize: '20px'
-    },
-    typeLabel: { display: 'flex' }
+    }
   };
 }

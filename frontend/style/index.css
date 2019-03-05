@@ -1,5 +1,5 @@
 .Metadata {
-  background: white;
+  background: var(--jp-layout-color1);
   height: 100%;
 }
 
@@ -42,6 +42,7 @@
   justify-content: start;
   padding: 10px;
   font-size: 11px;
+  color: var(--jp-ui-font-color1);
   max-height: 87vh;
   overflow-y: scroll;
   overflow-x: hidden;
