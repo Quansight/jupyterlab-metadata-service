@@ -1,0 +1,15 @@
+[{
+    "id": "extradata/person/1",
+    "target": "schemaorg/person/2",
+    "attribute": "telegram_user",
+    "type": "string",
+    "value": "person1"
+},
+{
+    "id": "extradata/person/2",
+    "target": "schemaorg/person/2",
+    "attribute": "twitter_user",
+    "type": "string",
+    "value": "person1"
+}
+]

@@ -3,12 +3,14 @@ const { ApolloServer } = require('apollo-server');
 const Schema = require('./schema');
 
 // set up any dataSources our resolvers need
-const SchemaOrgAPI = require('./datasources/schemaorg')
-const W3CAPI = require('./datasources/w3c')
+const SchemaOrgAPI = require('./datasources/schemaorg');
+const W3CAPI = require('./datasources/w3c');
+const ExtraDataAPI = require('./datasources/extradata');
 
 const dataSources = () => ({
   SchemaOrgAPI: new SchemaOrgAPI(),
-  W3CAPI: new W3CAPI()
+  W3CAPI: new W3CAPI(),
+  ExtraDataAPI: new ExtraDataAPI()
 });
 
 let args = process.argv.slice(2);

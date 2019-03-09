@@ -12,25 +12,36 @@ const { merge } = require('lodash');
 
 const SchemaOrgTypeDefs = require('./schemas/schemaorg');
 const W3CTypeDefs = require('./schemas/w3c');
+const ExtraDataTypeDefs = require('./schemas/extradata');
 
 var AnyType = new GraphQLUnionType({
   name: 'Any',
   types: [].concat(
     Object.values(SchemaOrgTypeDefs),
-    Object.values(W3CTypeDefs)
+    Object.values(W3CTypeDefs),
+    Object.values(ExtraDataTypeDefs)
   ),
   resolveType(value) {
     let _type = 'dataset';
+    let _context = 'schemaorg';
 
     if (value.id.includes('/')) {
+      _context = value.id.split('/')[0];
       _type = value.id.split('/')[1]
     }
 
-    for (let k in SchemaOrgTypeDefs) {
-    if (_type.toLowerCase() == k.toLowerCase()) {
-        return SchemaOrgTypeDefs[k];
+    if (_context == 'schemaorg') {
+      for (let k in SchemaOrgTypeDefs) {
+        if (_type.toLowerCase() == k.toLowerCase()) {
+            return SchemaOrgTypeDefs[k];
+        }
       }
     }
+
+    if (_context == 'extradata') {
+      return ExtraDataTypeDefs['ExtraData'];
+    }
+
     return null;
   }
 });
@@ -62,6 +73,15 @@ var query = {
     },
     resolve: (_, { id }, { dataSources } ) => {
       return dataSources.SchemaOrgAPI.getByID(id);
+    }
+  },
+  filterByTarget: {
+    type: new GraphQLList(ExtraDataTypeDefs['ExtraData']),
+    args: {
+      target: { type: GraphQLString }
+    },
+    resolve: (_, { target }, { dataSources } ) => {
+      return dataSources.ExtraDataAPI.filterByTarget(target);
     }
   },
 };
