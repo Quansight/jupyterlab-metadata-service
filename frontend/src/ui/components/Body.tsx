@@ -47,7 +47,7 @@ export default class Header extends React.Component<IBodyProps> {
   getFormatedData(): React.ReactNode {
     const nodes = this.formatData();
     const items = nodes.map((node, i) => <div key={i}>{node}</div>);
-    return <div className="bodyArea">{items}</div>;
+    return <div style={this.styles['jp-metadata-body-area']}>{items}</div>;
   }
 
   /**
@@ -99,9 +99,11 @@ export default class Header extends React.Component<IBodyProps> {
    */
   createField(key: string, converter: any, value: string): React.ReactNode {
     return (
-      <div className="bodyItem">
-        <span className="bodyKey">{key}</span>
-        <span className="bodyValue">{converter(value)}</span>
+      <div style={this.styles['jp-metadata-body-item']}>
+        <span style={this.styles['jp-metadata-body-key']}>{key}</span>
+        <span style={this.styles['jp-metadata-body-value']}>
+          {converter(value)}
+        </span>
       </div>
     );
   }
@@ -178,5 +180,33 @@ export default class Header extends React.Component<IBodyProps> {
     license: this.passThrough,
     provider: this.passThrough,
     __typename: this.passThrough
+  };
+
+  styles = {
+    'jp-metadata-body-area': {
+      display: 'flex',
+      flexDirection: 'column' as 'column',
+      justifyContent: 'start',
+      padding: '8px',
+      fontSize: '11px',
+      color: 'var(--jp-ui-font-color1)',
+      maxHeight: '87vh',
+      overflowY: 'scroll' as 'scroll',
+      overflowX: 'hidden' as 'hidden'
+    },
+    'jp-metadata-body-item': {
+      display: 'flex',
+      flexDirection: 'row' as 'row',
+      marginBottom: '5px'
+    },
+    'jp-metadata-body-key': {
+      fontWeight: 'bold' as 'bold',
+      whiteSpace: 'pre' as 'pre',
+      paddingRight: '8px'
+    },
+    'jp-metadata-body-value': {
+      whiteSpace: 'pre-line' as 'pre-line',
+      wordBreak: 'break-word' as 'break-word'
+    }
   };
 }
