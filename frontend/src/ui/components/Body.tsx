@@ -58,32 +58,31 @@ export default class Header extends React.Component<IBodyProps> {
     let data: any = this.props.data.data.dataset;
 
     formated.push(
-      this.createField(
-        this.nameMap['__typename'],
-        this.converterMap['__typename'],
-        data['__typename']
-      )
+      this.createField(this.nameMap['__typename'], data['__typename'])
     );
 
     for (let section in data) {
       if (data[section] !== null) {
         if (typeof data[section] === 'object') {
           formated.push(
+            this.createField(this.nameMap[section], data[section].name)
+          );
+        } else if (
+          section === 'dateModified' ||
+          section === 'dateCreated' ||
+          section === 'datePublished'
+        ) {
+          formated.push(
             this.createField(
               this.nameMap[section],
-              this.converterMap[section],
-              data[section].name
+              this.dateTransform(data[section])
             )
           );
         } else {
           section !== 'id' &&
             section !== '__typename' &&
             formated.push(
-              this.createField(
-                this.nameMap[section],
-                this.converterMap[section],
-                data[section]
-              )
+              this.createField(this.nameMap[section], data[section])
             );
         }
       }
@@ -97,19 +96,13 @@ export default class Header extends React.Component<IBodyProps> {
    * @param key Type: string - key value of a field
    * @param value Type: string - value of field
    */
-  createField(key: string, converter: any, value: string): React.ReactNode {
+  createField(key: string, value: string): React.ReactNode {
     return (
       <div style={this.styles['jp-metadata-body-item']}>
         <span style={this.styles['jp-metadata-body-key']}>{key}</span>
-        <span style={this.styles['jp-metadata-body-value']}>
-          {converter(value)}
-        </span>
+        <span style={this.styles['jp-metadata-body-value']}>{value}</span>
       </div>
     );
-  }
-
-  passThrough(field: any) {
-    return field;
   }
 
   dateTransform(field: any): string {
@@ -141,6 +134,7 @@ export default class Header extends React.Component<IBodyProps> {
       ':' +
       fullTime[1] +
       timeIdentifier;
+
     return timestamp;
   }
 
@@ -161,25 +155,6 @@ export default class Header extends React.Component<IBodyProps> {
     license: 'License:',
     provider: 'Provider:',
     __typename: 'Type:'
-  };
-
-  converterMap = {
-    author: this.passThrough,
-    category: this.passThrough,
-    citation: this.passThrough,
-    copyrightHolder: this.passThrough,
-    creator: this.passThrough,
-    dateCreated: this.dateTransform,
-    dateModified: this.dateTransform,
-    datePublished: this.dateTransform,
-    description: this.passThrough,
-    distribution: this.passThrough,
-    exampleOfWork: this.passThrough,
-    headline: this.passThrough,
-    keywords: this.passThrough,
-    license: this.passThrough,
-    provider: this.passThrough,
-    __typename: this.passThrough
   };
 
   styles = {
