@@ -15,7 +15,7 @@ interface IHeaderProps {
 /**
  * React Header component
  */
-export default class Header extends React.Component<IHeaderProps> {
+export default class DatasetHeader extends React.Component<IHeaderProps> {
   /**
    * Constructor
    *
@@ -175,7 +175,8 @@ export default class Header extends React.Component<IHeaderProps> {
       flexShrink: 1,
       flexDirection: 'row' as 'row',
       paddingLeft: '24px',
-      minWidth: '52px'
+      minWidth: '52px',
+      justifyContent: 'center'
     },
     'jp-metadata-header-label-area': {
       paddingLeft: '4px',

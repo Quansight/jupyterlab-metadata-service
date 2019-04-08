@@ -13,7 +13,8 @@ interface IBodyProps {
 /**
  * Header react component
  */
-export default class Header extends React.Component<IBodyProps> {
+export default class DatasetBody extends React.Component<IBodyProps> {
+  0;
   /**
    * Constructor
    *
@@ -60,7 +61,6 @@ export default class Header extends React.Component<IBodyProps> {
     formated.push(
       this.createField(this.nameMap['__typename'], data['__typename'])
     );
-
     for (let section in data) {
       if (data[section] !== null) {
         if (typeof data[section] === 'object') {
@@ -87,14 +87,6 @@ export default class Header extends React.Component<IBodyProps> {
         }
       }
     }
-
-    formated.push(
-      this.createField(
-        this.nameMap['related'],
-        this.related.name,
-        this.related.path
-      )
-    );
 
     return formated;
   }
@@ -173,13 +165,7 @@ export default class Header extends React.Component<IBodyProps> {
     keywords: 'Keywords:',
     license: 'License:',
     provider: 'Provider:',
-    __typename: 'Type:',
-    related: 'Related Articles:'
-  };
-
-  related = {
-    name: 'adrf-000005.csv',
-    path: '/data/adrf-000005.csv'
+    __typename: 'Type:'
   };
 
   styles = {
@@ -191,7 +177,7 @@ export default class Header extends React.Component<IBodyProps> {
       fontSize: '11px',
       color: 'var(--jp-ui-font-color1)',
       maxHeight: '87vh',
-      overflowY: 'scroll' as 'scroll',
+      overflowY: 'auto' as 'auto',
       overflowX: 'hidden' as 'hidden'
     },
     'jp-metadata-body-item': {

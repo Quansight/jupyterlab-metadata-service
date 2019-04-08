@@ -11,10 +11,9 @@ import { IActiveDataset, IConverterRegistry } from '@jupyterlab/databus';
 import { IMetadataCommentsService } from '../metadata_iface/comments';
 import { IMetadataDatasetsService } from '../metadata_iface/datasets';
 import { IMetadataPeopleService } from '../metadata_iface/people';
+import App from './App';
 
-import App from './components/App';
-
-export function activateMetadataUI(
+export function activateMetadataExplore(
   app: JupyterFrontEnd,
   activeDataset: IActiveDataset,
   palette: ICommandPalette,
@@ -24,7 +23,9 @@ export function activateMetadataUI(
   labShell: ILabShell,
   converters: IConverterRegistry
 ): void {
-  console.log('JupyterLab extension jupyterlab-metadata-service is activated!');
+  console.log(
+    'JupyterLab extension jupyterlab-metadata-explorer is activated!'
+  );
 
   // Create a single widget
   const widget = ReactWidget.create(
@@ -45,40 +46,20 @@ export function activateMetadataUI(
       }}
     </UseSignal>
   );
-  widget.id = 'jlab-metadata-service';
-  widget.title.iconClass = 'jp-FileIcon jp-SideBar-tabIcon';
-  widget.title.caption = 'Metadata';
+  widget.id = 'jlab-metadata-explorer';
+  widget.title.label = 'Metadata Explorer';
+  widget.title.closable = true;
 
-  labShell.add(widget, 'right');
+  const command: string = 'metadataExplorer:open';
+  app.commands.addCommand(command, {
+    label: 'Metadata Explorer',
+    execute: () => {
+      if (!widget.isAttached) {
+        labShell.add(widget, 'main');
+      }
+      app.shell.activateById(widget.id);
+    }
+  });
+
+  palette.addItem({ command, category: 'Metadata' });
 }
-
-// /**
-//  * Handle update requests for the widget.
-//  */
-// onUpdateRequest(msg: Message): void {
-//   console.log(msg);
-//   let self = this;
-
-//   let f = async () => {
-//     let divQueryResult: HTMLDivElement = document.createElement('div');
-
-//     console.log('mutating JSON ...');
-//     const resultJSON = await this.datasets.createNewDataset({
-//       name: 'JSON'
-//     });
-//     console.log(resultJSON);
-
-//     const resultCSV = await this.datasets.createNewDataset({
-//       name: 'CSV'
-//     });
-//     console.log(resultCSV);
-
-//     console.log('quering ...');
-//     this.datasets.queryAllDatasets().then(data => {
-//       divQueryResult.innerHTML = JSON.stringify(data);
-//       console.log(data);
-//       self.node.appendChild(divQueryResult);
-//     });
-//   };
-//   f();
-// }

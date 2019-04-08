@@ -1,9 +1,6 @@
 import { JupyterFrontEndPlugin, ILabShell } from '@jupyterlab/application';
 import { ICommandPalette } from '@jupyterlab/apputils';
-import {
-  IActiveDataset,
-  IConverterRegistry
-} from '@jupyterlab/databus';
+import { IActiveDataset, IConverterRegistry } from '@jupyterlab/databus';
 
 import { IMetadataApolloGraphQlConnection } from './metadata_iface/apollo_connection';
 import { activateApolloGraphQlConnection } from './metadata_concrete/apollo_connection';
@@ -18,6 +15,7 @@ import { IMetadataDatasetsService } from './metadata_iface/datasets';
 import { activateMetadataDatasets } from './metadata_concrete/datasets';
 
 import { activateMetadataUI } from './ui';
+import { activateMetadataExplore } from './metadata_explorer';
 
 import '../style/index.css';
 
@@ -90,6 +88,21 @@ const uiExtension: JupyterFrontEndPlugin<void> = {
   activate: activateMetadataUI
 };
 
+const metadataExplore: JupyterFrontEndPlugin<void> = {
+  id: 'jupyterlab-metadata-explorer-ui',
+  autoStart: true,
+  requires: [
+    IActiveDataset,
+    ICommandPalette,
+    IMetadataCommentsService,
+    IMetadataDatasetsService,
+    IMetadataPeopleService,
+    ILabShell,
+    IConverterRegistry
+  ],
+  activate: activateMetadataExplore
+};
+
 /**
  * Export the plugins as default.
  */
@@ -98,7 +111,8 @@ const plugins: JupyterFrontEndPlugin<any>[] = [
   commentExtension,
   peopleExtension,
   datasetExtension,
-  uiExtension
+  uiExtension,
+  metadataExplore
 ];
 
 export default plugins;

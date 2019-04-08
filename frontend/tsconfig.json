@@ -2,11 +2,7 @@
   "compilerOptions": {
     "declaration": true,
     "jsx": "react",
-    "lib": [
-      "es2015",
-      "dom",
-      "esnext.asynciterable"
-    ],
+    "lib": ["es2015", "dom", "esnext.asynciterable"],
     "module": "commonjs",
     "moduleResolution": "node",
     "noEmitOnError": true,
@@ -23,7 +19,11 @@
     "src/**/*.ts",
     "src/ui/index.tsx",
     "src/index.tsx",
-    "src/ui/components/*"
+    "src/ui/components/*",
+    "src/metadata_explorer/index.tsx",
+    "src/metadata_explorer/Header.tsx",
+    "src/metadata_explorer/App.tsx",
+    "src/metadata_explorer/Body.tsx"
   ],
   "references": [
     {
