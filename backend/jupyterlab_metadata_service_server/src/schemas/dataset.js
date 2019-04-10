@@ -2,36 +2,39 @@ const { gql } = require('apollo-server');
 
 const typeDef = gql`
 
-  union OrgOrPerson = Organization | Person
+  union author = Organization | Person
+  union copyrightHolder = Organization | Person
+  union creator = Organization | Person
+  union provider = Organization | Person
+  union publisher = Organization | Person
 
   type Dataset {
-    # Internal properties
-    id: String! # TODO: change to identifier
     # Properties from Thing
-    name: String!
+    identifier: String
+    name: [String]
     # Properties from CreativeWork
-    author: Person
-    category: String # TODO: check this field
-    citation: String
-    copyrightHolder: Person  # TODO: or Organization
-    copyrightYear: Int
-    creator: Person  # TODO: or Organization
-    dateCreated: String
-    dateModified: String
-    datePublished: String
-    description: String
-    distribution: String
-    exampleOfWork: CreativeWork
-    headline: String
-    keywords: String
-    license: String  # TODO: or CreativeWork
-    provider: Organization  # TODO: or Person
-    publisher: Organization  # TODO: or Person
-    sourceOrganization: Organization
-    spatialCoverage: String
-    temporalCoverage: String
-    url: String
-    version: String
+    author: [author]
+    category: [String] # TODO: check this field: educationalUse, learningResourceType
+    citation: [String]
+    copyrightHolder: [copyrightHolder]
+    copyrightYear: [Int]
+    creator: [creator]
+    dateCreated: [String]
+    dateModified: [String]
+    datePublished: [String]
+    description: [String]
+    distribution: [String]
+    exampleOfWork: [CreativeWork]
+    headline: [String]
+    keywords: [String]
+    license: [CreativeWork]  # TODO: or CreativeWork
+    provider: [provider]  # TODO: or Person
+    publisher: [publisher]  # TODO: or Person
+    sourceOrganization: [Organization]
+    spatialCoverage: [String]
+    temporalCoverage: [String]
+    url: [String]
+    version: [String]
   }
 
   type DatasetResponse {
