@@ -1,12 +1,24 @@
+const {
+  GraphQLUnionType
+} = require('graphql');
+
 const { gql, makeExecutableSchema } = require('apollo-server');
 const { merge } = require('lodash');
 
 // schemas
 const Annotation = require('./schemas/annotation');
-const CreativeWork = require('./schemas/creative_work');
-const Dataset = require('./schemas/dataset');
-const Person = require('./schemas/person');
-const Organization = require('./schemas/organization');
+const SchemaOrg = require('./schemas/schemaorg');
+
+const AnyType = new GraphQLUnionType({
+  name: 'AnyType',
+  types: [].concat(
+    Annotation.TypeDef,
+    Object.values(SchemaOrg),
+  ),
+  resolveType(value) {
+    return value.__typename;
+  }
+});
 
 const Query = gql`
   type Query {
@@ -27,17 +39,10 @@ module.exports = makeExecutableSchema({
   typeDefs: [
     Query,
     Annotation.typeDef,
-    CreativeWork.typeDef,
-    Dataset.typeDef,
-    Person.typeDef,
-    Organization.typeDef
-  ],
+    AnyType,
+  ].concat(...Object.values(SchemaOrg)),
   resolvers: merge(
     resolvers,
-    Annotation.resolvers,
-    CreativeWork.resolvers,
-    Dataset.resolvers,
-    Person.resolvers,
-    Organization.resolvers
+    Annotation.resolvers
   ),
 });

@@ -1,9 +1,13 @@
 const { DataSource } = require('apollo-datasource');
 
-let store = require('./data/person.json');
-let nextId = store.length + 2;
+let store = require('./data/schemaorg.json');
+let nextId = {};
 
-class PersonAPI extends DataSource {
+for (i in store) {
+  nextId[i] = store[i].length + 2;
+}
+
+class SchemaOrgAPI extends DataSource {
   constructor() {
     super();
   }
@@ -19,12 +23,7 @@ class PersonAPI extends DataSource {
   }
 
   reducer(data) {
-    return {
-      id: data.id || '0',
-      name: data.name,
-      email: data.email,
-      image: data.image
-    }
+    return data
   }
 
   fetchall() {
@@ -33,17 +32,18 @@ class PersonAPI extends DataSource {
 
   getByID(id) {
     // TODO: change to filter
-    for (let i in store) {
-      if (store[i].id == id) {
-        return this.reducer(store[i]);
+    typename = id.split('/')[1];
+    for (let i in store[typename]) {
+      if (store[typename][i].identifier == id) {
+        return this.reducer(store[typename][i]);
       }
     }
     return null;
   }
 
   insert(data) {
-    data.id = "person/" + nextId++;
-    store.push(data);
+    data.id = data.__typename + "/" + nextId++;
+    store[data.__typename].push(data);
     return data;
   }
 
@@ -57,4 +57,4 @@ class PersonAPI extends DataSource {
   }
 }
 
-module.exports = PersonAPI;
+module.exports = SchemaOrgAPI;
