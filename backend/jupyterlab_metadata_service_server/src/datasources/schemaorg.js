@@ -41,7 +41,11 @@ class SchemaOrgAPI extends DataSource {
     return null;
   }
 
-  insert(data) {
+  create(data) {
+    if (data.__typename === undefined) {
+      console.error('Data needs `__typename` information.');
+      return;
+    }
     data.id = data.__typename + "/" + nextId++;
     store[data.__typename].push(data);
     return data;

@@ -6173,7 +6173,11 @@ const creator = new GraphQLUnionType({
     Person,
   ),
   resolveType(value) {
-    return value.__typename;
+    if (value.__typename) {
+      return value.__typename;
+    }
+
+    return null
   }
 });
 
@@ -6914,8 +6918,16 @@ const participant = new GraphQLUnionType({
     Person,
   ),
   resolveType(value) {
-    return value.__typename;
+    if (value.__typename) {
+      return value.__typename;
+    }
+
+    if (value.identifier) {
+      return value.identifier.split('/')[1];
+    }
+
+    return 'Thing'
   }
 });
 
-module.exports = { TypeAndQuantityNode, MapCategoryType, DefinedTermSet, BroadcastFrequencySpecification, GeoShape, DataDownload, PriceSpecification, Brand, SpeakableSpecification, QualitativeValue, Duration, AlignmentObject, CreativeWorkSeries, EventStatusType, Occupation, LocationFeatureSpecification, MonetaryAmount, Comment, ActionStatusType, Place, Dataset, Country, AudioObject, OfferCatalog, WarrantyPromise, DataFeed, Property, MusicAlbumProductionType, CorrectionComment, Organization, Audience, MusicAlbumReleaseType, MusicReleaseFormatType, ContactPoint, PhysicalActivityCategory, Episode, CableOrSatelliteService, Review, ItemList, BreadcrumbList, ProductModel, InteractionCounter, AboutPage, MusicRelease, GeoCoordinates, MusicPlaylist, CreativeWorkSeason, Demand, OfferItemCondition, RepaymentSpecification, VideoObject, DataCatalog, MusicRecording, CreativeWork, MusicAlbum, Map, MusicComposition, AggregateRating, PostalAddress, PublicationEvent, QuantitativeValue, EntryPoint, Service, Event, Clip, OpeningHoursSpecification, ImageObject, GenderType, DataFeedItem, WebPageElement, BroadcastChannel, Offer, PaymentMethod, AdministrativeArea, Photograph, EducationalOrganization, WebSite, BusinessFunction, LoanOrCredit, ItemListOrderType, ServiceChannel, MediaObject, DayOfWeek, ProgramMembership, Product, Rating, BusinessEntityType, GeospatialGeometry, Question, DefinedTerm, Specialty, WarrantyScope, Answer, MusicGroup, StructuredValue, DeliveryMethod, Enumeration, Distance, ListItem, OwnershipInfo, Article, SoftwareApplication, Language, NewsArticle, Class, MediaSubscription, Action, MonetaryAmountDistribution, ContactPointOption, EducationalOccupationalCredential, Thing, Person, ItemAvailability, BroadcastService }; 
+module.exports = { TypeAndQuantityNode, MapCategoryType, DefinedTermSet, BroadcastFrequencySpecification, GeoShape, DataDownload, PriceSpecification, Brand, SpeakableSpecification, QualitativeValue, Duration, AlignmentObject, CreativeWorkSeries, EventStatusType, Occupation, LocationFeatureSpecification, MonetaryAmount, Comment, ActionStatusType, Place, Dataset, Country, AudioObject, OfferCatalog, WarrantyPromise, DataFeed, Property, MusicAlbumProductionType, CorrectionComment, Organization, Audience, MusicAlbumReleaseType, MusicReleaseFormatType, ContactPoint, PhysicalActivityCategory, Episode, CableOrSatelliteService, Review, ItemList, BreadcrumbList, ProductModel, InteractionCounter, AboutPage, MusicRelease, GeoCoordinates, MusicPlaylist, CreativeWorkSeason, Demand, OfferItemCondition, RepaymentSpecification, VideoObject, DataCatalog, MusicRecording, CreativeWork, MusicAlbum, Map, MusicComposition, AggregateRating, PostalAddress, PublicationEvent, QuantitativeValue, EntryPoint, Service, Event, Clip, OpeningHoursSpecification, ImageObject, GenderType, DataFeedItem, WebPageElement, BroadcastChannel, Offer, PaymentMethod, AdministrativeArea, Photograph, EducationalOrganization, WebSite, BusinessFunction, LoanOrCredit, ItemListOrderType, ServiceChannel, MediaObject, DayOfWeek, ProgramMembership, Product, Rating, BusinessEntityType, GeospatialGeometry, Question, DefinedTerm, Specialty, WarrantyScope, Answer, MusicGroup, StructuredValue, DeliveryMethod, Enumeration, Distance, ListItem, OwnershipInfo, Article, SoftwareApplication, Language, NewsArticle, Class, MediaSubscription, Action, MonetaryAmountDistribution, ContactPointOption, EducationalOccupationalCredential, Thing, Person, ItemAvailability, BroadcastService };

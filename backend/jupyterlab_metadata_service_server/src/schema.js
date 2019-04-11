@@ -49,46 +49,48 @@ const Response = new GraphQLObjectType({
   })
 });
 
-// Define the Query type
-var query = {
-  fetchall: {
-    type: new GraphQLList(AnyType),
-    args: {
-      type: { type: GraphQLString }
-    },
-    resolve: (root, args, { dataSources } ) => {
-      return dataSources.SchemaOrgAPI.fetchall(args.type);
-    }
-  },
-  getByID: {
-    type: AnyType,
-    args: {
-      id: { type: GraphQLString }
-    },
-    resolve: (_, { id }, { dataSources } ) => {
-      return dataSources.SchemaOrgAPI.getByID(id);
-    }
-  }
-};
 
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
   fields: {
-    ...query,
+    fetchall: {
+      type: new GraphQLList(AnyType),
+      args: {
+        type: { type: GraphQLString }
+      },
+      resolve: (root, args, { dataSources } ) => {
+        return dataSources.SchemaOrgAPI.fetchall(args.type);
+      }
+    },
+    getByID: {
+      type: AnyType,
+      args: {
+        id: { type: GraphQLString }
+      },
+      resolve: (_, { id }, { dataSources } ) => {
+        return dataSources.SchemaOrgAPI.getByID(id);
+      }
+    }
   }
 });
 
-/*
-const Mutation = new GraphQLObjectType({
-  name: 'Mutation',
+const RootMutation = new GraphQLObjectType({
+  name: 'RootMutationType',
   fields: {
-    ...DataCatalog.mutation
+    create: {
+      type: AnyType,
+      args: {
+        data: { type: AnyType }
+      },
+      resolve: (_, { data }, { dataSources } ) => {
+        return dataSources.SchemaOrgAPI.create(data);
+      }
+    }
   }
 });
-*/
 
 module.exports = new GraphQLSchema({
   Any: AnyType,
-  query: RootQuery
-  /* mutation: Mutation */
+  query: RootQuery,
+  mutation: RootMutation
 });
