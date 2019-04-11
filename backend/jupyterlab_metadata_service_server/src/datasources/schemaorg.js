@@ -23,7 +23,7 @@ class SchemaOrgAPI extends DataSource {
   }
 
   reducer(data) {
-    return data
+    return data;
   }
 
   fetchall() {
@@ -32,7 +32,7 @@ class SchemaOrgAPI extends DataSource {
 
   getByID(id) {
     // TODO: change to filter
-    typename = id.split('/')[1];
+    let typename = id.split('/')[1];
     for (let i in store[typename]) {
       if (store[typename][i].identifier == id) {
         return this.reducer(store[typename][i]);

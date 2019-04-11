@@ -20,12 +20,12 @@ var AnyType = new GraphQLUnionType({
     // Object.values(W3CTypeDefs),
   ),
   resolveType(value) {
-    let _type = 'dataset';
+    let _type = 'Dataset';
     let _context = 'schemaorg';
 
-    if (value.id.includes('/')) {
-      _context = value.id.split('/')[0];
-      _type = value.id.split('/')[1]
+    if (value.identifier.includes('/')) {
+      _context = value.identifier.split('/')[0];
+      _type = value.identifier.split('/')[1]
     }
 
     if (_context == 'schemaorg') {
@@ -34,10 +34,6 @@ var AnyType = new GraphQLUnionType({
             return SchemaOrgTypeDefs[k];
         }
       }
-    }
-
-    if (_context == 'extradata') {
-      return ExtraDataTypeDefs['ExtraData'];
     }
 
     return null;
