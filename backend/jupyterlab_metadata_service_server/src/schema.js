@@ -10,7 +10,8 @@ const {
 
 const { merge } = require('lodash');
 
-const SchemaOrgTypeDefs = require('./schemas/schemaorg');
+const SchemaOrgTypeDefs = require('./schemas/schemaorg-tyepdef');
+const AnyInput = require('./schemas/schemaorg-input');
 // const W3CTypeDefs = require('./schemas/w3c');
 
 var AnyType = new GraphQLUnionType({
@@ -80,7 +81,7 @@ const RootMutation = new GraphQLObjectType({
     create: {
       type: AnyType,
       args: {
-        data: { type: AnyType }
+        data: { type: AnyInput }
       },
       resolve: (_, { data }, { dataSources } ) => {
         return dataSources.SchemaOrgAPI.create(data);
@@ -91,6 +92,7 @@ const RootMutation = new GraphQLObjectType({
 
 module.exports = new GraphQLSchema({
   Any: AnyType,
+  AnyInput: AnyInput,
   query: RootQuery,
   mutation: RootMutation
 });
