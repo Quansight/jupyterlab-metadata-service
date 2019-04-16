@@ -44,16 +44,32 @@ class SchemaOrgAPI extends DataSource {
   create(data) {
     if (data.__typename === undefined) {
       console.error('Data needs `__typename` information.');
-      return;
+      return {
+        result: null,
+        success: false,
+        message: 'Data needs `__typename` information.'
+      };
     }
-    data.id = data.__typename + "/" + nextId++;
+
+    data.identifier = (
+      'schemaorg/'
+      + data.__typename
+      + "/"
+      + nextId[data.__typename]++
+    );
+
     store[data.__typename].push(data);
-    return data;
+
+    return {
+      result: data,
+      success: true,
+      message: '',
+    };
   }
 
-  deleteByID(id) {
+  delete(id) {
     for (let i in store) {
-      if (store[i].id == id) {
+      if (store[i].identifier == id) {
         return this.reducer(store.splice(i, 1)[0]);
       }
     }

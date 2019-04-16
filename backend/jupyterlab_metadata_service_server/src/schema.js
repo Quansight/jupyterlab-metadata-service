@@ -10,8 +10,8 @@ const {
 
 const { merge } = require('lodash');
 
-const SchemaOrgTypeDefs = require('./schemas/schemaorg-tyepdef');
-const AnyInput = require('./schemas/schemaorg-input');
+const SchemaOrgTypeDefs = require('./schemas/schemaorg-typedef');
+const { AnyInput } = require('./schemas/schemaorg-input');
 // const W3CTypeDefs = require('./schemas/w3c');
 
 var AnyType = new GraphQLUnionType({
@@ -21,8 +21,8 @@ var AnyType = new GraphQLUnionType({
     // Object.values(W3CTypeDefs),
   ),
   resolveType(value) {
-    let _type = 'Dataset';
-    let _context = 'schemaorg';
+    let _type = '';
+    let _context = '';
 
     if (value.identifier.includes('/')) {
       _context = value.identifier.split('/')[0];
@@ -36,6 +36,8 @@ var AnyType = new GraphQLUnionType({
         }
       }
     }
+
+    console.log('AnyTypeResolve null');
 
     return null;
   }
@@ -79,12 +81,12 @@ const RootMutation = new GraphQLObjectType({
   name: 'RootMutationType',
   fields: {
     create: {
-      type: AnyType,
+      type: Response,
       args: {
-        data: { type: AnyInput }
+        input: { type: AnyInput }
       },
-      resolve: (_, { data }, { dataSources } ) => {
-        return dataSources.SchemaOrgAPI.create(data);
+      resolve: (_, { input }, { dataSources } ) => {
+        return dataSources.SchemaOrgAPI.create(input);
       }
     }
   }
