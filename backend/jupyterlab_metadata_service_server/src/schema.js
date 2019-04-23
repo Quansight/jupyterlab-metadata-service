@@ -1,43 +1,100 @@
 const { gql, makeExecutableSchema } = require('apollo-server');
+const {
+  GraphQLObjectType,
+  GraphQLSchema,
+  GraphQLList,
+  GraphQLString,
+  GraphQLBoolean,
+  GraphQLUnionType
+} = require('graphql');
+
 const { merge } = require('lodash');
 
-// schemas
-const Annotation = require('./schemas/annotation');
-const CreativeWork = require('./schemas/creative_work');
-const Dataset = require('./schemas/dataset');
-const Person = require('./schemas/person');
-const Organization = require('./schemas/organization');
+const SchemaOrgTypeDefs = require('./schemas/schemaorg-typedef');
+const { AnyInput } = require('./schemas/schemaorg-input');
+// const W3CTypeDefs = require('./schemas/w3c');
 
-const Query = gql`
-  type Query {
-    _empty: String
-  }
-
-  type Mutation {
-    _empty: String
-  }
-`;
-
-const resolvers = {
-  Query: { },
-  Mutation: { },
-};
-
-module.exports = makeExecutableSchema({
-  typeDefs: [
-    Query,
-    Annotation.typeDef,
-    CreativeWork.typeDef,
-    Dataset.typeDef,
-    Person.typeDef,
-    Organization.typeDef
-  ],
-  resolvers: merge(
-    resolvers,
-    Annotation.resolvers,
-    CreativeWork.resolvers,
-    Dataset.resolvers,
-    Person.resolvers,
-    Organization.resolvers
+var AnyType = new GraphQLUnionType({
+  name: 'Any',
+  types: [].concat(
+    Object.values(SchemaOrgTypeDefs),
+    // Object.values(W3CTypeDefs),
   ),
+  resolveType(value) {
+    let _type = '';
+    let _context = '';
+
+    if (value.identifier.includes('/')) {
+      _context = value.identifier.split('/')[0];
+      _type = value.identifier.split('/')[1]
+    }
+
+    if (_context == 'schemaorg') {
+      for (let k in SchemaOrgTypeDefs) {
+        if (_type.toLowerCase() == k.toLowerCase()) {
+            return SchemaOrgTypeDefs[k];
+        }
+      }
+    }
+
+    console.log('AnyTypeResolve null');
+
+    return null;
+  }
+});
+
+const Response = new GraphQLObjectType({
+  name: 'Response',
+  fields: () => ({
+    success: { type: GraphQLBoolean },
+    message: { type: GraphQLString },
+    result: { type: AnyType }
+  })
+});
+
+
+const RootQuery = new GraphQLObjectType({
+  name: 'RootQueryType',
+  fields: {
+    fetchall: {
+      type: new GraphQLList(AnyType),
+      args: {
+        type: { type: GraphQLString }
+      },
+      resolve: (root, args, { dataSources } ) => {
+        return dataSources.SchemaOrgAPI.fetchall(args.type);
+      }
+    },
+    getByID: {
+      type: AnyType,
+      args: {
+        id: { type: GraphQLString }
+      },
+      resolve: (_, { id }, { dataSources } ) => {
+        return dataSources.SchemaOrgAPI.getByID(id);
+      }
+    }
+  }
+});
+
+const RootMutation = new GraphQLObjectType({
+  name: 'RootMutationType',
+  fields: {
+    create: {
+      type: Response,
+      args: {
+        input: { type: AnyInput }
+      },
+      resolve: (_, { input }, { dataSources } ) => {
+        return dataSources.SchemaOrgAPI.create(input);
+      }
+    }
+  }
+});
+
+module.exports = new GraphQLSchema({
+  Any: AnyType,
+  AnyInput: AnyInput,
+  query: RootQuery,
+  mutation: RootMutation
 });

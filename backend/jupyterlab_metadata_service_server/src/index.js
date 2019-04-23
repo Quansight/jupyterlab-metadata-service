@@ -4,17 +4,11 @@ const Schema = require('./schema');
 
 // set up any dataSources our resolvers need
 const AnnotationAPI = require('./datasources/annotation')
-const CreativeWorkAPI = require('./datasources/creative_work');
-const DatasetAPI = require('./datasources/dataset');
-const OrganizationAPI = require('./datasources/organization');
-const PersonAPI = require('./datasources/person');
+const SchemaOrgAPI = require('./datasources/schemaorg');
 
 const dataSources = () => ({
   AnnotationAPI: new AnnotationAPI(),
-  CreativeWorkAPI: new CreativeWorkAPI(),
-  DatasetAPI: new DatasetAPI(),
-  OrganizationAPI: new OrganizationAPI(),
-  PersonAPI: new PersonAPI(),
+  SchemaOrgAPI: new SchemaOrgAPI()
 });
 
 let args = process.argv.slice(2);
