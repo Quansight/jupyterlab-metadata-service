@@ -3,26 +3,22 @@ import * as React from 'react';
 /**
  * React Props Interface
  */
-interface IBodyProps {
+interface IDetailBodyProps {
   /**
    * Metadata to display
    */
   data: any | undefined;
-
-  setDetailCard: (detail: Object) => void;
-
-  itemPicked: string;
 }
 /**
  * Header react component
  */
-export default class Body extends React.Component<IBodyProps> {
+export default class Body extends React.Component<IDetailBodyProps> {
   /**
    * Constructor
    *
    * @param props react props
    */
-  constructor(props: IBodyProps) {
+  constructor(props: IDetailBodyProps) {
     super(props);
 
     this.getFormatedData = this.getFormatedData.bind(this);
@@ -104,31 +100,12 @@ export default class Body extends React.Component<IBodyProps> {
    * @param value Type: string - value of field
    */
   createField(key: string, value: string, data?: Object): React.ReactNode {
-    const isPicked = this.props.itemPicked === value;
-    if (data === undefined) {
-      return (
-        <div style={this.styles['jp-metadata-body-item']}>
-          <span style={this.styles['jp-metadata-body-key']}>{key}</span>
-          <span style={this.styles['jp-metadata-body-value']}>{value}</span>
-        </div>
-      );
-    } else {
-      return (
-        <div style={this.styles['jp-metadata-body-item']}>
-          <span style={this.styles['jp-metadata-body-key']}>{key}</span>
-          <span
-            className={
-              isPicked
-                ? 'jp-metadata-body-value-object-selected'
-                : 'jp-metadata-body-value-object'
-            }
-            onClick={() => this.props.setDetailCard(data)}
-          >
-            {value}
-          </span>
-        </div>
-      );
-    }
+    return (
+      <div style={this.styles['jp-metadata-body-item']}>
+        <span style={this.styles['jp-metadata-body-key']}>{key}</span>
+        <span style={this.styles['jp-metadata-body-value']}>{value}</span>
+      </div>
+    );
   }
 
   dateTransform(field: any): string {

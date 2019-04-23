@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import Header from './Header';
 import Body from './Body';
+import DetailHeader from './DetailHeader';
 
 import { IMetadataDatasetsService } from '../';
 
@@ -32,6 +33,7 @@ interface IAppStates {
    * Holds the response from querying metadata
    */
   results: any;
+  details: any;
 }
 
 /**
@@ -47,8 +49,11 @@ export default class App extends React.Component<IAppProps, IAppStates> {
     super(props);
 
     this.state = {
-      results: { data: { dataset: null } }
+      results: { data: { dataset: null } },
+      details: {}
     };
+
+    this.setDetailCard = this.setDetailCard.bind(this);
   }
 
   /**
@@ -61,21 +66,25 @@ export default class App extends React.Component<IAppProps, IAppStates> {
           <Header targetName={this.props.targetName} />
           {this.state.results.data.dataset !== null ? (
             this.state.results.data.dataset.id === this.props.target && (
-              <Body data={this.state.results} />
+              <Body
+                data={this.state.results}
+                itemPicked={this.state.details.name}
+                setDetailCard={this.setDetailCard}
+              />
             )
           ) : (
-            <Body data={undefined} />
+            <Body
+              data={undefined}
+              itemPicked={this.state.details.name}
+              setDetailCard={this.setDetailCard}
+            />
           )}
         </div>
         <div className="jp-metadata-explorer-details">
-          <Header targetName={this.props.targetName} />
-          {this.state.results.data.dataset !== null ? (
-            this.state.results.data.dataset.id === this.props.target && (
-              <Body data={this.state.results} />
-            )
-          ) : (
-            <Body data={undefined} />
-          )}
+          <DetailHeader
+            targetName={this.state.details.name}
+            type={this.state.details.__typename}
+          />
         </div>
       </div>
     );
@@ -100,5 +109,9 @@ export default class App extends React.Component<IAppProps, IAppStates> {
         }
       }
     });
+  }
+
+  setDetailCard(data: object): void {
+    this.setState({ details: data });
   }
 }

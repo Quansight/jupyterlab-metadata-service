@@ -15,7 +15,7 @@ interface IHeaderProps {
 /**
  * React Header component
  */
-export default class DatasetHeader extends React.Component<IHeaderProps> {
+export default class Header extends React.Component<IHeaderProps> {
   /**
    * Constructor
    *

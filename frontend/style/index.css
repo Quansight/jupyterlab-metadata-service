@@ -20,11 +20,10 @@
   border-left: 1px solid var(--jp-border-color1);
 }
 
-.jp-metadata-explorer- .jp-metadata-body-value-link {
-  color: #1976d2;
+.jp-metadata-body-value-object:hover {
+  background: var(--jp-layout-color2);
 }
 
-.jp-metadata-body-value-link:hover {
-  color: #1976d2;
-  text-decoration-line: underline;
+.jp-metadata-body-value-object-selected {
+  background: #bdbdbd;
 }
