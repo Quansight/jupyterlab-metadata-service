@@ -3,7 +3,7 @@ import { ICommandPalette } from '@jupyterlab/apputils';
 import {
   IActiveDataset,
   IConverterRegistry
-} from '@jupyterlab/databus';
+} from '@jupyterlab/dataregistry';
 
 import { IMetadataApolloGraphQlConnection } from './metadata_iface/apollo_connection';
 import { activateApolloGraphQlConnection } from './metadata_concrete/apollo_connection';

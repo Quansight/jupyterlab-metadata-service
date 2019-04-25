@@ -9,7 +9,7 @@ import { UseSignal } from '@jupyterlab/apputils';
 import {
   IActiveDataset,
   IConverterRegistry,
-} from '@jupyterlab/databus';
+} from '@jupyterlab/dataregistry';
 
 import { IMetadataCommentsService } from '../metadata_iface/comments';
 import { IMetadataDatasetsService } from '../metadata_iface/datasets';

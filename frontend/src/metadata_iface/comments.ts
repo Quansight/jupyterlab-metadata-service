@@ -24,6 +24,7 @@ export interface IMetadataCommentsService {
     target: String,
     value: String,
     creator: Object,
+    indicator: Object,
     label?: String
   ): void;
 

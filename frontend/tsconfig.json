@@ -42,7 +42,7 @@
       "path": "../coreutils"
     },
     {
-      "path": "../databus"
+      "path": "../dataregistry"
     },
     {
       "path": "../docregistry"

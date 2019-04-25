@@ -13,6 +13,7 @@ const typeDef = gql`
     motivation: String # commenting
     resolved: Boolean
     target: String
+    indicator: AnnotationTextEditorIndicator
     total: Int
     type: String # Annotation
   }
@@ -38,6 +39,16 @@ const typeDef = gql`
     result: AnnotationTextualBody
   }
 
+  type AnnotationTextEditorIndicator {
+    end: AnnotationTextEditorInfo
+    start: AnnotationTextEditorInfo
+  }
+
+  type AnnotationTextEditorInfo {
+    line: Int
+    column: Int
+  }
+
   # input
   input AnnotationInput {
     id: String
@@ -49,8 +60,21 @@ const typeDef = gql`
     motivation: String # commenting
     resolved: Boolean
     target: String
+    indicator: AnnotationTextEditorIndicatorInput
     total: Int
     type: String # Annotation
+  }
+
+  #input
+  input AnnotationTextEditorIndicatorInput {
+    end: AnnotationTextEditorInfoInput
+    start: AnnotationTextEditorInfoInput
+  }
+
+  #input
+  input AnnotationTextEditorInfoInput {
+    line: Int
+    column: Int
   }
 
   # input
@@ -75,6 +99,7 @@ const typeDef = gql`
       label: String
       motivation: String
       target: String
+      indicator: AnnotationTextEditorIndicatorInput
       resolved: Boolean = false
     ): AnnotationResponse
 
@@ -123,6 +148,7 @@ const resolvers = {
         motivation: args.motivation || 'commenting',
         resolved: false,
         target: args.target,
+        indicator: args.indicator || undefined,
         type: 'Annotation'
       };
 

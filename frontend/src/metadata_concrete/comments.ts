@@ -24,6 +24,16 @@ class MetadataCommentsService implements IMetadataCommentsService {
             label
             total
             resolved
+            indicator {
+              end {
+                line
+                column
+              }
+              start {
+                line
+                column
+              }
+            }
             body {
               value
               created
@@ -51,6 +61,7 @@ class MetadataCommentsService implements IMetadataCommentsService {
     target: string,
     value: string,
     creator: object,
+    indicator: object,
     label?: string
   ): void {
     this.connection.mutate(
@@ -59,12 +70,14 @@ class MetadataCommentsService implements IMetadataCommentsService {
         mutation(
           $body: AnnotationTextualBodyInput
           $creator: PersonInput
+          $indicator: AnnotationTextEditorIndicatorInput
           $label: String
           $target: String
         ) {
           addAnnotation(
             body: $body
             creator: $creator
+            indicator: $indicator
             label: $label
             target: $target
           ) {
@@ -74,6 +87,16 @@ class MetadataCommentsService implements IMetadataCommentsService {
               id
               target
               context
+              indicator {
+                end {
+                  line
+                  column
+                }
+                start {
+                  line
+                  column
+                }
+              }
               label
               total
               body {
@@ -93,6 +116,7 @@ class MetadataCommentsService implements IMetadataCommentsService {
       {
         body: { value: value },
         creator: creator,
+        indicator: indicator || undefined,
         label: label || null,
         target: target
       }
