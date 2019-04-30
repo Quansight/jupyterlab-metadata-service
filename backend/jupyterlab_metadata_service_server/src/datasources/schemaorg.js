@@ -51,6 +51,11 @@ class SchemaOrgAPI extends DataSource {
       };
     }
 
+    if (!(data.__typename in nextId)) {
+      nextId[data.__typename] = 1;
+      store[data.__typename] = [];
+    }
+
     data.identifier = (
       'schemaorg/'
       + data.__typename
