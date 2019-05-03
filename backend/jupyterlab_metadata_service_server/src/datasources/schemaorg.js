@@ -7,6 +7,35 @@ for (i in store) {
   nextId[i] = store[i].length + 2;
 }
 
+function getNextID(typename) {
+  if (!(typename in nextId)) {
+    nextId[typename] = 1;
+    store[typename] = [];
+  }
+  return (
+    'schemaorg/'
+    + __typename
+    + "/"
+    + nextId[typename]++
+  );
+}
+
+function createItem(item) {
+    navigateNestedObject(item)
+    item['identifier'] = getNextID(item,__typename)
+}
+
+function navigateNestedObject(data) {
+  for (k in data) {
+    let v = data[k];
+    if (v instanceof Object) {
+      if (!('identifier' in v)) {
+        createItem(v)
+      }
+    }
+  }
+}
+
 class SchemaOrgAPI extends DataSource {
   constructor() {
     super();
@@ -30,15 +59,35 @@ class SchemaOrgAPI extends DataSource {
     return store.map(obj => this.reducer(obj));
   }
 
-  getByID(id) {
+  getByID(identifier) {
     // TODO: change to filter
-    let typename = id.split('/')[1];
+    let typename = identifier.split('/')[1];
     for (let i in store[typename]) {
-      if (store[typename][i].identifier == id) {
+      if (store[typename][i].identifier == identifier) {
         return this.reducer(store[typename][i]);
       }
     }
     return null;
+  }
+
+  searchBy(input) {
+    const typename = input.__typename;
+    let result = [];
+
+    for (let i in store[typename]) {
+      for (let k in  input) {
+        if (k == '__typename') {
+          continue;
+        }
+        let property = k;
+        let value = input[k];
+
+        if (store[typename][i][property] == value) {
+          result.push(this.reducer(store[typename][i]));
+        }
+      }
+    }
+    return result;
   }
 
   create(data) {
@@ -51,19 +100,27 @@ class SchemaOrgAPI extends DataSource {
       };
     }
 
-    if (!(data.__typename in nextId)) {
-      nextId[data.__typename] = 1;
-      store[data.__typename] = [];
-    }
-
-    data.identifier = (
-      'schemaorg/'
-      + data.__typename
-      + "/"
-      + nextId[data.__typename]++
-    );
+    data.identifier = getNextID(data.__typename);
 
     store[data.__typename].push(data);
+
+    return {
+      result: data,
+      success: true,
+      message: '',
+    };
+  }
+
+  update(data) {
+    let typename = data.identifier.split('/')[1];
+
+    for (let i in store[typename]) {
+      if (store[typename][i].identifier == data.identifier) {
+        data = this.reducer(data);
+        navigateNestedObject(data);
+        store[typename][i] = data;
+      }
+    }
 
     return {
       result: data,
