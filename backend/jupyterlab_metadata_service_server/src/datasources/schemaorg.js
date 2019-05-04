@@ -14,26 +14,33 @@ function getNextID(typename) {
   }
   return (
     'schemaorg/'
-    + __typename
+    + typename
     + "/"
     + nextId[typename]++
   );
 }
 
 function createItem(item) {
-    navigateNestedObject(item)
-    item['identifier'] = getNextID(item,__typename)
+  item = navigateNestedObject(item);
+  item['identifier'] = getNextID(item.__typename);
+  store[item.__typename].push(item);
+  return item;
 }
 
 function navigateNestedObject(data) {
   for (k in data) {
     let v = data[k];
     if (v instanceof Object) {
-      if (!('identifier' in v)) {
-        createItem(v)
+      if (Array.isArray(v)) {
+        // list
+        data[k] = navigateNestedObject(data[k]);
+      } else if (!('identifier' in v)) {
+        // dictionary
+        data[k] = createItem(data[k]);
       }
     }
   }
+  return data;
 }
 
 class SchemaOrgAPI extends DataSource {
@@ -63,6 +70,7 @@ class SchemaOrgAPI extends DataSource {
     // TODO: change to filter
     let typename = identifier.split('/')[1];
     for (let i in store[typename]) {
+      console.log(store[typename][i].identifier);
       if (store[typename][i].identifier == identifier) {
         return this.reducer(store[typename][i]);
       }
@@ -100,12 +108,12 @@ class SchemaOrgAPI extends DataSource {
       };
     }
 
-    data.identifier = getNextID(data.__typename);
-
-    store[data.__typename].push(data);
+    let result  = createItem(data);
+    console.log('Oki');
+    console.log(result);
 
     return {
-      result: data,
+      result: result,
       success: true,
       message: '',
     };
