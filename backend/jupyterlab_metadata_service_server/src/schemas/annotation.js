@@ -33,18 +33,28 @@ const typeDef = gql`
     result: Annotation
   }
 
+  # type
   type AnnotationTextualBodyResponse {
     success: Boolean!
     message: String
     result: AnnotationTextualBody
   }
 
+  # type
   type AnnotationTextEditorIndicator {
-    end: AnnotationTextEditorInfo
-    start: AnnotationTextEditorInfo
+    initial: AnnotationTextEditorIndicatorInfo
+    current: AnnotationTextEditorIndicatorInfo
   }
 
-  type AnnotationTextEditorInfo {
+  # type
+  type AnnotationTextEditorIndicatorInfo {
+    end: AnnotationTextEditorRange
+    start: AnnotationTextEditorRange
+    context: String
+  }
+
+  # type
+  type AnnotationTextEditorRange {
     line: Int
     column: Int
   }
@@ -65,14 +75,21 @@ const typeDef = gql`
     type: String # Annotation
   }
 
-  #input
+  # input
   input AnnotationTextEditorIndicatorInput {
-    end: AnnotationTextEditorInfoInput
-    start: AnnotationTextEditorInfoInput
+    initial: AnnotationTextEditorIndicatorInfoInput
+    current: AnnotationTextEditorIndicatorInfoInput
   }
 
-  #input
-  input AnnotationTextEditorInfoInput {
+  # input
+  input AnnotationTextEditorIndicatorInfoInput {
+    end: AnnotationTextEditorRangeInput
+    start: AnnotationTextEditorRangeInput
+    context: String
+  }
+
+  # input
+  input AnnotationTextEditorRangeInput {
     line: Int
     column: Int
   }
@@ -112,6 +129,11 @@ const typeDef = gql`
     
     # update resolved state
     updateAnnotationResolve(
+      annotation: AnnotationInput
+    ): AnnotationResponse
+
+    # update text editor indicator current state
+    updateAnnotationTextEditorIndicatorCurrent(
       annotation: AnnotationInput
     ): AnnotationResponse
 
@@ -166,6 +188,19 @@ const resolvers = {
     updateAnnotationResolve: async (root, args, { dataSources }) => {
 
       newData = dataSources.AnnotationAPI.updateResolve(args.annotation);
+
+      return {
+        success: true,
+        message: null,
+        result: newData
+      };
+    },
+    /**
+     * 
+     */
+    updateAnnotationTextEditorIndicatorCurrent: async (root, args, { dataSources }) => {
+
+      newData = dataSources.AnnotationAPI.updateTextEditorIndicatorCurrent(args.annotation);
 
       return {
         success: true,

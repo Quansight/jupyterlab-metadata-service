@@ -37,4 +37,6 @@ export interface IMetadataCommentsService {
    * Post a new resolved state to a thread
    */
   setResolvedValue(target: String, threadId: String, value: Boolean): void;
+
+  setCurrentIndicator(target: String, threadId: String, value: Object): void;
 }

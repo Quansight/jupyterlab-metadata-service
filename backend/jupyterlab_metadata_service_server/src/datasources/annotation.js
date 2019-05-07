@@ -42,6 +42,14 @@ class AnnotationAPI extends DataSource {
     }
   }
 
+  reducer_update_text_editor_indicator_current(current) {
+    return {
+      indicator: {
+        current
+      }
+    }
+  }
+
   reducer_body_textual(data) {
     return {
       created: data.created,
@@ -99,6 +107,19 @@ class AnnotationAPI extends DataSource {
       if (store[i].id == annotation.id && store[i].target == annotation.target) {
         store[i].resolved = annotation.resolved;
         return this.reducer_update_resolved(annotation.resolved)
+      }
+    }
+    return null
+  }
+
+  /**
+   *
+   */
+  updateTextEditorIndicatorCurrent(annotation) {
+    for (let i in store) {
+      if (store[i].id == annotation.id && store[i].target == annotation.target) {
+        store[i].indicator.current = annotation.indicator.current;
+        return this.reducer_update_text_editor_indicator_current(annotation.indicator.current)
       }
     }
     return null
