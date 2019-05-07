@@ -68,10 +68,19 @@ const RootQuery = new GraphQLObjectType({
     getByID: {
       type: AnyType,
       args: {
-        id: { type: GraphQLString }
+        identifier: { type: GraphQLString }
       },
-      resolve: (_, { id }, { dataSources } ) => {
-        return dataSources.SchemaOrgAPI.getByID(id);
+      resolve: (_, { identifier }, { dataSources } ) => {
+        return dataSources.SchemaOrgAPI.getByID(identifier);
+      }
+    },
+    searchBy: {
+      type: GraphQLList(AnyType),
+      args: {
+        input: { type: AnyInput },
+      },
+      resolve: (_, { input }, { dataSources } ) => {
+        return dataSources.SchemaOrgAPI.searchBy(input);
       }
     }
   }
@@ -87,6 +96,15 @@ const RootMutation = new GraphQLObjectType({
       },
       resolve: (_, { input }, { dataSources } ) => {
         return dataSources.SchemaOrgAPI.create(input);
+      }
+    },
+    update: {
+      type: Response,
+      args: {
+        input: { type: AnyInput }
+      },
+      resolve: (_, { input }, { dataSources } ) => {
+        return dataSources.SchemaOrgAPI.update(input);
       }
     }
   }

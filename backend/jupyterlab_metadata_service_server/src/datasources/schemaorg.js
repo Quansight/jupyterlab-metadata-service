@@ -7,6 +7,42 @@ for (i in store) {
   nextId[i] = store[i].length + 2;
 }
 
+function getNextID(typename) {
+  if (!(typename in nextId)) {
+    nextId[typename] = 1;
+    store[typename] = [];
+  }
+  return (
+    'schemaorg/'
+    + typename
+    + "/"
+    + nextId[typename]++
+  );
+}
+
+function createItem(item) {
+  item = navigateNestedObject(item);
+  item['identifier'] = getNextID(item.__typename);
+  store[item.__typename].push(item);
+  return item;
+}
+
+function navigateNestedObject(data) {
+  for (k in data) {
+    let v = data[k];
+    if (v instanceof Object) {
+      if (Array.isArray(v)) {
+        // list
+        data[k] = navigateNestedObject(data[k]);
+      } else if (!('identifier' in v)) {
+        // dictionary
+        data[k] = createItem(data[k]);
+      }
+    }
+  }
+  return data;
+}
+
 class SchemaOrgAPI extends DataSource {
   constructor() {
     super();
@@ -30,15 +66,36 @@ class SchemaOrgAPI extends DataSource {
     return store.map(obj => this.reducer(obj));
   }
 
-  getByID(id) {
+  getByID(identifier) {
     // TODO: change to filter
-    let typename = id.split('/')[1];
+    let typename = identifier.split('/')[1];
     for (let i in store[typename]) {
-      if (store[typename][i].identifier == id) {
+      console.log(store[typename][i].identifier);
+      if (store[typename][i].identifier == identifier) {
         return this.reducer(store[typename][i]);
       }
     }
     return null;
+  }
+
+  searchBy(input) {
+    const typename = input.__typename;
+    let result = [];
+
+    for (let i in store[typename]) {
+      for (let k in  input) {
+        if (k == '__typename') {
+          continue;
+        }
+        let property = k;
+        let value = input[k];
+
+        if (store[typename][i][property] == value) {
+          result.push(this.reducer(store[typename][i]));
+        }
+      }
+    }
+    return result;
   }
 
   create(data) {
@@ -51,14 +108,27 @@ class SchemaOrgAPI extends DataSource {
       };
     }
 
-    data.identifier = (
-      'schemaorg/'
-      + data.__typename
-      + "/"
-      + nextId[data.__typename]++
-    );
+    let result  = createItem(data);
+    console.log('Oki');
+    console.log(result);
 
-    store[data.__typename].push(data);
+    return {
+      result: result,
+      success: true,
+      message: '',
+    };
+  }
+
+  update(data) {
+    let typename = data.identifier.split('/')[1];
+
+    for (let i in store[typename]) {
+      if (store[typename][i].identifier == data.identifier) {
+        data = this.reducer(data);
+        navigateNestedObject(data);
+        store[typename][i] = data;
+      }
+    }
 
     return {
       result: data,
