@@ -249,6 +249,30 @@ class MetadataCommentsService implements IMetadataCommentsService {
         console.error(err);
       });
   }
+
+  removeAnnotationById(threadId: String): void {
+    console.log(threadId, 'IDIDIDI');
+    this.connection
+      .mutate(
+        gql`
+          mutation($id: ID!) {
+            remAnnotation(id: $id) {
+              success
+              message
+              result {
+                id
+              }
+            }
+          }
+        `,
+        {
+          id: threadId
+        }
+      )
+      .catch(err => {
+        console.error(err);
+      });
+  }
 }
 
 export function activateMetadataComments(

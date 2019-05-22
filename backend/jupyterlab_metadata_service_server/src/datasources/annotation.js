@@ -146,14 +146,13 @@ class AnnotationAPI extends DataSource {
   deleteByID(id) {
     let result = null;
 
-    if (store.length >= id) {
-      for (let i in store) {
-        if (store[i].id == id) {
-          result = store.splice(i, 1)[0];
-          break;
-        }
+    for (let i in store) {
+      if (store[i].id == id) {
+        result = store.splice(i, 1)[0];
+        break;
       }
     }
+
     return this.reducer(result);
   }
 }

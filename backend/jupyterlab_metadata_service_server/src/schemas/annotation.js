@@ -234,7 +234,7 @@ const resolvers = {
     /**
      *
      */
-    remAnnotation: (root, args, { dataSources }) => {
+    remAnnotation: async (root, args, { dataSources }) => {
       let message = null;
       let status = true;
       const result = dataSources.AnnotationAPI.deleteByID(args.id);
@@ -246,8 +246,8 @@ const resolvers = {
 
       return {
         success: status,
-        result: result,
-        message: message
+        message: message,
+        result: result
       };
     }
   }

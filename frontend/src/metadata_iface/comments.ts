@@ -39,4 +39,6 @@ export interface IMetadataCommentsService {
   setResolvedValue(target: String, threadId: String, value: Boolean): void;
 
   setCurrentIndicator(target: String, threadId: String, value: Object): void;
+
+  removeAnnotationById(threadId: String): void;
 }
