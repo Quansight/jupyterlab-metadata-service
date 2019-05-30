@@ -24,14 +24,18 @@ export interface IMetadataCommentsService {
     target: String,
     value: String,
     creator: Object,
-    indicator: Object,
-    label?: String
+    indicator: Object
   ): void;
 
   /**
    * Create a new comment in a thread.
    */
-  createComment(threadId: String, value: String, creator: Object): void;
+  createComment(
+    threadId: String,
+    value: String,
+    creator: Object,
+    index?: Number
+  ): void;
 
   /**
    * Post a new resolved state to a thread

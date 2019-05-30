@@ -155,7 +155,12 @@ class MetadataCommentsService implements IMetadataCommentsService {
       });
   }
 
-  createComment(threadId: String, value: String, creator: Object) {
+  createComment(
+    threadId: String,
+    value: String,
+    creator: Object,
+    index?: Number
+  ) {
     this.connection
       .mutate(
         /* mutation statement */
@@ -175,13 +180,14 @@ class MetadataCommentsService implements IMetadataCommentsService {
                   name
                   image
                 }
+                index
               }
             }
           }
         `,
         /* variables */
         {
-          body: { value: value, creator: creator },
+          body: { value: value, creator: creator, index: index },
           annotation: { id: threadId }
         }
       )
@@ -251,7 +257,6 @@ class MetadataCommentsService implements IMetadataCommentsService {
   }
 
   removeAnnotationById(threadId: String): void {
-    console.log(threadId, 'IDIDIDI');
     this.connection
       .mutate(
         gql`
