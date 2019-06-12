@@ -23,8 +23,10 @@
     "src/metadata_explorer/index.tsx",
     "src/metadata_explorer/Header.tsx",
     "src/metadata_explorer/App.tsx",
-    "src/metadata_explorer/Body.tsx",
-    "src/metadata_explorer/DetailHeader.tsx"
+    "src/metadata_explorer/FirstOrderEntity.tsx",
+    "src/metadata_explorer/DetailHeader.tsx",
+    "src/metadata_explorer/Person.tsx",
+    "src/metadata_explorer/Article.tsx"
   ],
   "references": [
     {

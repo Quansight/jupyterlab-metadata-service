@@ -16,4 +16,5 @@ export interface IMetadataDatasetsService {
    * things other than a file.
    */
   queryById(id: String): Promise<{}>;
+  queryByTarget(target: String): Promise<{}>;
 }

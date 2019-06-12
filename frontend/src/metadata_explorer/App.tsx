@@ -1,8 +1,9 @@
 import * as React from 'react';
 
 import Header from './Header';
-import Body from './Body';
-import DetailHeader from './DetailHeader';
+// import FirstOrderEntity from './FirstOrderEntity';
+// import Person from './Person';
+import Article from './Article';
 
 import { IMetadataDatasetsService } from '../';
 
@@ -62,30 +63,22 @@ export default class App extends React.Component<IAppProps, IAppStates> {
   render() {
     return (
       <div className="jp-metadata-explorer-window">
-        <div className="jp-metadata-explorer-dataset">
-          <Header targetName={this.props.targetName} />
-          {this.state.results.data.dataset !== null ? (
-            this.state.results.data.dataset.id === this.props.target && (
-              <Body
-                data={this.state.results}
-                itemPicked={this.state.details.name}
-                setDetailCard={this.setDetailCard}
-              />
-            )
-          ) : (
-            <Body
-              data={undefined}
+        <Header targetName={this.props.targetName} />
+        {this.state.results.data.dataset !== null ? (
+          this.state.results.data.dataset.id === this.props.target && (
+            <Article
+              data={this.state.results}
               itemPicked={this.state.details.name}
               setDetailCard={this.setDetailCard}
             />
-          )}
-        </div>
-        <div className="jp-metadata-explorer-details">
-          <DetailHeader
-            targetName={this.state.details.name}
-            type={this.state.details.__typename}
+          )
+        ) : (
+          <Article
+            data={undefined}
+            itemPicked={this.state.details.name}
+            setDetailCard={this.setDetailCard}
           />
-        </div>
+        )}
       </div>
     );
   }

@@ -60,6 +60,54 @@ class MetadataDatasetsService implements IMetadataDatasetsService {
       { id: id }
     );
   }
+
+  queryByTarget(target: String): Promise<{}> {
+    return this.connection.query(
+      gql`
+        query($target: String!) {
+          dataset(target: $target) {
+            id
+            author {
+              id
+              name
+            }
+            category
+            citation
+            copyrightHolder {
+              id
+              name
+            }
+            copyrightYear
+            creator {
+              id
+              name
+              affiliation {
+                id
+                name
+              }
+            }
+            dateCreated
+            dateModified
+            datePublished
+            description
+            distribution
+            exampleOfWork {
+              id
+              name
+            }
+            headline
+            keywords
+            license
+            provider {
+              id
+              name
+            }
+          }
+        }
+      `,
+      { target: target }
+    );
+  }
 }
 
 export function activateMetadataDatasets(

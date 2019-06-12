@@ -2,28 +2,3 @@
   background: var(--jp-layout-color1);
   height: 100%;
 }
-
-.jp-metadata-explorer-window {
-  display: flex;
-  flex-direction: row;
-  background: var(--jp-layout-color1);
-  height: 100%;
-  width: 100%;
-}
-
-.jp-metadata-explorer-dataset {
-  width: 50%;
-}
-
-.jp-metadata-explorer-details {
-  width: 50%;
-  border-left: 1px solid var(--jp-border-color1);
-}
-
-.jp-metadata-body-value-object:hover {
-  background: var(--jp-layout-color2);
-}
-
-.jp-metadata-body-value-object-selected {
-  background: #bdbdbd;
-}
