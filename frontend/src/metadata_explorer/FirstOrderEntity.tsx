@@ -35,71 +35,49 @@ export default class FistOrderEntity extends React.Component<
     return (
       <div>
         <div style={this.styles['jp-metadata-primary-field-area']}>
-          <div style={this.styles['jp-metadata-primary-field']}>
+          {this.renderPrimaryFields()}
+          {/* <div style={this.styles['jp-metadata-primary-field']}>
             <div style={this.styles['jp-metadata-subtitle-primary']} />
             <div style={this.styles['jp-metadata-descrition-area']}>
               <div style={this.styles['jp-metadata-descrition-primary']} />
             </div>
-          </div>
-          <div style={this.styles['jp-metadata-primary-field']}>
-            <div style={this.styles['jp-metadata-subtitle-primary']} />
-            <div style={this.styles['jp-metadata-descrition-area']}>
-              <div style={this.styles['jp-metadata-descrition-primary']} />
-            </div>
-          </div>
-          <div style={this.styles['jp-metadata-primary-field']}>
-            <div style={this.styles['jp-metadata-subtitle-primary']} />
-            <div style={this.styles['jp-metadata-descrition-area']}>
-              <div style={this.styles['jp-metadata-descrition-primary']} />
-            </div>
-          </div>
-          <div style={this.styles['jp-metadata-primary-field']}>
-            <div style={this.styles['jp-metadata-subtitle-primary']} />
-            <div style={this.styles['jp-metadata-descrition-area']}>
-              <div style={this.styles['jp-metadata-descrition-primary']} />
-            </div>
-          </div>
-          <div style={this.styles['jp-metadata-primary-field']}>
-            <div style={this.styles['jp-metadata-subtitle-primary']} />
-            <div style={this.styles['jp-metadata-descrition-area']}>
-              <div style={this.styles['jp-metadata-descrition-primary']} />
-            </div>
-          </div>
+          </div> */}
         </div>
         <div style={this.styles['jp-metadata-secondary-field-area']}>
-          <div style={this.styles['jp-metadata-secondary-field']}>
+          {/* <div style={this.styles['jp-metadata-secondary-field']}>
             <div style={this.styles['jp-metadata-subtitle-secondary']} />
             <div style={this.styles['jp-metadata-descrition-area']}>
               <div style={this.styles['jp-metadata-descrition-secondary']} />
             </div>
-          </div>
-          <div style={this.styles['jp-metadata-secondary-field']}>
-            <div style={this.styles['jp-metadata-subtitle-secondary']} />
-            <div style={this.styles['jp-metadata-descrition-area']}>
-              <div style={this.styles['jp-metadata-descrition-secondary']} />
-            </div>
-          </div>
-          <div style={this.styles['jp-metadata-secondary-field']}>
-            <div style={this.styles['jp-metadata-subtitle-secondary']} />
-            <div style={this.styles['jp-metadata-descrition-area']}>
-              <div style={this.styles['jp-metadata-descrition-secondary']} />
-            </div>
-          </div>
-          <div style={this.styles['jp-metadata-secondary-field']}>
-            <div style={this.styles['jp-metadata-subtitle-secondary']} />
-            <div style={this.styles['jp-metadata-descrition-area']}>
-              <div style={this.styles['jp-metadata-descrition-secondary']} />
-            </div>
-          </div>
-          <div style={this.styles['jp-metadata-secondary-field']}>
-            <div style={this.styles['jp-metadata-subtitle-secondary']} />
-            <div style={this.styles['jp-metadata-descrition-area']}>
-              <div style={this.styles['jp-metadata-descrition-secondary']} />
-            </div>
-          </div>
+          </div> */}
         </div>
       </div>
     );
+  }
+
+  renderPrimaryFields(): React.ReactNode {
+    let primaryFields = [];
+    if (this.props.data) {
+      let response = this.props.data.data.searchBy[0];
+      Object.keys(response).forEach(key => {
+        if (response[key]) {
+          primaryFields.push(
+            <div style={this.styles['jp-metadata-primary-field']}>
+              <div style={this.styles['jp-metadata-subtitle-primary']}>
+                {key}
+              </div>
+              <div style={this.styles['jp-metadata-descrition-area']}>
+                <div
+                  style={this.styles['jp-metadata-descrition-primary']}
+                ></div>
+              </div>
+            </div>
+          );
+        }
+      });
+      return primaryFields;
+    }
+    return;
   }
 
   styles = {

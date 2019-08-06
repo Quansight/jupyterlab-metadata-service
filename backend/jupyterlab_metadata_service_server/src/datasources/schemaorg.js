@@ -1,6 +1,6 @@
-const { DataSource } = require('apollo-datasource');
+const { DataSource } = require("apollo-datasource");
 
-let store = require('./data/schemaorg.json');
+let store = require("./data/schemaorg.json");
 let nextId = {};
 
 for (i in store) {
@@ -12,17 +12,12 @@ function getNextID(typename) {
     nextId[typename] = 1;
     store[typename] = [];
   }
-  return (
-    'schemaorg/'
-    + typename
-    + "/"
-    + nextId[typename]++
-  );
+  return "schemaorg/" + typename + "/" + nextId[typename]++;
 }
 
 function createItem(item) {
   item = navigateNestedObject(item);
-  item['identifier'] = getNextID(item.__typename);
+  item["identifier"] = getNextID(item.__typename);
   store[item.__typename].push(item);
   return item;
 }
@@ -34,7 +29,7 @@ function navigateNestedObject(data) {
       if (Array.isArray(v)) {
         // list
         data[k] = navigateNestedObject(data[k]);
-      } else if (!('identifier' in v)) {
+      } else if (!("identifier" in v)) {
         // dictionary
         data[k] = createItem(data[k]);
       }
@@ -68,9 +63,8 @@ class SchemaOrgAPI extends DataSource {
 
   getByID(identifier) {
     // TODO: change to filter
-    let typename = identifier.split('/')[1];
+    let typename = identifier.split("/")[1];
     for (let i in store[typename]) {
-      console.log(store[typename][i].identifier);
       if (store[typename][i].identifier == identifier) {
         return this.reducer(store[typename][i]);
       }
@@ -83,8 +77,8 @@ class SchemaOrgAPI extends DataSource {
     let result = [];
 
     for (let i in store[typename]) {
-      for (let k in  input) {
-        if (k == '__typename') {
+      for (let k in input) {
+        if (k == "__typename") {
           continue;
         }
         let property = k;
@@ -100,27 +94,27 @@ class SchemaOrgAPI extends DataSource {
 
   create(data) {
     if (data.__typename === undefined) {
-      console.error('Data needs `__typename` information.');
+      console.error("Data needs `__typename` information.");
       return {
         result: null,
         success: false,
-        message: 'Data needs `__typename` information.'
+        message: "Data needs `__typename` information."
       };
     }
 
-    let result  = createItem(data);
-    console.log('Oki');
+    let result = createItem(data);
+    console.log("Oki");
     console.log(result);
 
     return {
       result: result,
       success: true,
-      message: '',
+      message: ""
     };
   }
 
   update(data) {
-    let typename = data.identifier.split('/')[1];
+    let typename = data.identifier.split("/")[1];
 
     for (let i in store[typename]) {
       if (store[typename][i].identifier == data.identifier) {
@@ -133,7 +127,7 @@ class SchemaOrgAPI extends DataSource {
     return {
       result: data,
       success: true,
-      message: '',
+      message: ""
     };
   }
 

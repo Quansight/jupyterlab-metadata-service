@@ -39,7 +39,11 @@
     ]
   },
   "nodemonConfig": {
-    "ignore": ["/test/*.*", "/docs/*.*", "/node_modules/*.*"],
+    "ignore": [
+      "/test/*.*",
+      "/docs/*.*",
+      "/node_modules/*.*"
+    ],
     "delay": "2500"
   }
 }

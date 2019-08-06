@@ -1,9 +1,9 @@
 import * as React from 'react';
 
 import Header from './Header';
-// import FirstOrderEntity from './FirstOrderEntity';
+import FirstOrderEntity from './FirstOrderEntity';
 // import Person from './Person';
-import Article from './Article';
+// import Article from './Article';
 
 import { IMetadataDatasetsService } from '../';
 
@@ -27,6 +27,7 @@ interface IAppProps {
    * DatasetService that interacts with graphql server
    */
   datasets: IMetadataDatasetsService;
+  cellMetadata: any;
 }
 
 interface IAppStates {
@@ -50,7 +51,7 @@ export default class App extends React.Component<IAppProps, IAppStates> {
     super(props);
 
     this.state = {
-      results: { data: { dataset: null } },
+      results: { data: { searchBy: null } },
       details: {}
     };
 
@@ -64,16 +65,14 @@ export default class App extends React.Component<IAppProps, IAppStates> {
     return (
       <div className="jp-metadata-explorer-window">
         <Header targetName={this.props.targetName} />
-        {this.state.results.data.dataset !== null ? (
-          this.state.results.data.dataset.id === this.props.target && (
-            <Article
-              data={this.state.results}
-              itemPicked={this.state.details.name}
-              setDetailCard={this.setDetailCard}
-            />
-          )
+        {this.state.results.data.searchBy !== null ? (
+          <FirstOrderEntity
+            data={this.state.results}
+            itemPicked={this.state.details.name}
+            setDetailCard={this.setDetailCard}
+          />
         ) : (
-          <Article
+          <FirstOrderEntity
             data={undefined}
             itemPicked={this.state.details.name}
             setDetailCard={this.setDetailCard}
@@ -87,21 +86,30 @@ export default class App extends React.Component<IAppProps, IAppStates> {
    * Called each time component updates
    */
   componentDidUpdate(): void {
-    this.props.datasets.queryById(this.props.target).then((results: any) => {
-      if (this.state.results.data.dataset !== null) {
-        if (this.state.results.data.dataset.id !== results.data.dataset.id) {
-          this.setState({ results: results });
-        }
-      } else {
-        if (results.data.dataset !== null) {
-          this.setState({ results: results });
-        } else {
-          if (this.state.results.data.dataset !== null) {
-            this.setState({ results: { data: { dataset: null } } });
+    this.props.datasets
+      .getDataset('/data/adrf-000009.csv')
+      .then((results: any) => {
+        if (
+          this.state.results &&
+          this.state.results.data &&
+          this.state.results.data.searchBy
+        ) {
+          if (
+            this.state.results.data.searchBy.identifer !==
+            results.data.searchBy.identifer
+          ) {
+            this.setState({ results: results });
           }
+        } else if (results.data && results.data.searchBy) {
+          this.setState({ results: results });
+        } else if (
+          this.state.results &&
+          this.state.results.data &&
+          this.state.results.data.searchBy
+        ) {
+          this.setState({ results: { data: { searchBy: null } } });
         }
-      }
-    });
+      });
   }
 
   setDetailCard(data: object): void {

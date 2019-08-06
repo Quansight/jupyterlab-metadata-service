@@ -5,44 +5,60 @@ import { JupyterFrontEnd, ILabShell } from '@jupyterlab/application';
 import { ICommandPalette, ReactWidget } from '@jupyterlab/apputils';
 
 import { UseSignal } from '@jupyterlab/apputils';
+import { IDocumentManager } from '@jupyterlab/docmanager';
 
-import { IActiveDataset, IConverterRegistry } from '@jupyterlab/databus';
-
-import { IMetadataCommentsService } from '../metadata_iface/comments';
 import { IMetadataDatasetsService } from '../metadata_iface/datasets';
 import { IMetadataPeopleService } from '../metadata_iface/people';
+
 import App from './App';
+import { Signal } from '@phosphor/signaling';
+import { IDocumentWidget, DocumentRegistry } from '@jupyterlab/docregistry';
+
+import { NotebookPanel } from '@jupyterlab/notebook';
+import { Cell } from '@jupyterlab/cells';
 
 export function activateMetadataExplore(
   app: JupyterFrontEnd,
-  activeDataset: IActiveDataset,
   palette: ICommandPalette,
-  comments: IMetadataCommentsService,
   datasets: IMetadataDatasetsService,
   people: IMetadataPeopleService,
   labShell: ILabShell,
-  converters: IConverterRegistry
+  docManager: IDocumentManager
 ): void {
-  console.log(
-    'JupyterLab extension jupyterlab-metadata-explorer is activated!'
-  );
+  let pathChanged = new Signal<{}, void>({});
+  let path = '';
+  // let type = '';
+
+  // emits signal with a path when file changes
+  labShell.currentChanged.connect((sender, args) => {
+    if (args) {
+      const current = args.newValue;
+      if (current === null) {
+        return;
+      } else {
+        const context = docManager.contextForWidget(current);
+        if (!context) {
+          return;
+        }
+        path = context.path;
+        // type = context.contentsModel.type;
+        pathChanged.emit(void 0);
+      }
+    }
+  });
 
   // Create a single widget
   const widget = ReactWidget.create(
-    <UseSignal signal={activeDataset.signal}>
+    <UseSignal signal={pathChanged}>
       {(sender, args) => {
-        try {
-          let URL = activeDataset.active.pathname;
-          return (
-            <App
-              target={URL}
-              targetName={URL.split('/').pop()}
-              datasets={datasets}
-            />
-          );
-        } catch {
-          return <App target={''} targetName={''} datasets={datasets} />;
-        }
+        return (
+          <App
+            target={path}
+            targetName={path.split('/').pop()}
+            datasets={datasets}
+            cellMetadata={''}
+          />
+        );
       }}
     </UseSignal>
   );
@@ -50,16 +66,48 @@ export function activateMetadataExplore(
   widget.title.label = 'Metadata Explorer';
   widget.title.closable = true;
 
-  const command: string = 'metadataExplorer:open';
-  app.commands.addCommand(command, {
-    label: 'Metadata Explorer',
+  // creates a right click comand to open metadata
+  app.commands.addCommand('jupyterlab-metadata:openMetadataExplorer', {
+    label: 'View Metadata',
+    isVisible: () => {
+      const curWidget = docManager.findWidget(path);
+
+      // If widget is active, add indicator
+      if (curWidget) {
+        const context = docManager.contextForWidget(curWidget);
+        if (context) {
+          return context.contentsModel.type === 'notebook';
+        }
+      }
+      return false;
+    },
     execute: () => {
+      let panelWidget = docManager.findWidget(path) as IDocumentWidget<
+        NotebookPanel,
+        DocumentRegistry.IModel
+      >;
+      // test.content.activeCell.model.metadata
+      let test = panelWidget.content as NotebookPanel;
+      test;
+
+      let panel = panelWidget.content as any; // Should be NotebookPanel
+
+      let cell: Cell = panel.activeCell;
+
+      let cellMetadata = cell.model.metadata.toJSON();
+      console.log(cellMetadata);
+
       if (!widget.isAttached) {
         labShell.add(widget, 'main');
       }
       app.shell.activateById(widget.id);
+      pathChanged.emit(void 0);
     }
   });
 
-  palette.addItem({ command, category: 'Metadata' });
+  app.contextMenu.addItem({
+    command: 'jupyterlab-metadata:openMetadataExplorer',
+    selector: 'body',
+    rank: Infinity
+  });
 }

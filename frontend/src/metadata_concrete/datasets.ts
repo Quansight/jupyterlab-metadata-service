@@ -13,99 +13,93 @@ class MetadataDatasetsService implements IMetadataDatasetsService {
     this.connection = connection;
   }
 
-  queryById(id: String): Promise<{}> {
+  getDataset(path: String): Promise<{}> {
+    const input = { __typename: 'Dataset', sameAs: path };
     return this.connection.query(
       gql`
-        query($id: String!) {
-          dataset(id: $id) {
-            id
-            author {
-              id
+        query($input: AnyInput!) {
+          searchBy(input: $input) {
+            ... on Dataset {
+              __typename
+              identifier
+              sameAs
+              version
+              temporalCoverage
+              description
+              url
+              headline
+              dateCreated
+              datePublished
+              dateModified
+              keywords
               name
-            }
-            category
-            citation
-            copyrightHolder {
-              id
-              name
-            }
-            copyrightYear
-            creator {
-              id
-              name
-              affiliation {
-                id
-                name
+              headline
+              creator {
+                ... on Person {
+                  identifier
+                  name
+                }
               }
-            }
-            dateCreated
-            dateModified
-            datePublished
-            description
-            distribution
-            exampleOfWork {
-              id
-              name
-            }
-            headline
-            keywords
-            license
-            provider {
-              id
-              name
+              publisher {
+                ... on Organization {
+                  __typename
+                  name
+                  identifier
+                  url
+                }
+                ... on Person {
+                  __typename
+                  name
+                  identifier
+                  url
+                }
+              }
             }
           }
         }
       `,
-      { id: id }
+      { input: input }
     );
   }
 
-  queryByTarget(target: String): Promise<{}> {
+  getPerson(identifier: String): Promise<{}> {
     return this.connection.query(
       gql`
-        query($target: String!) {
-          dataset(target: $target) {
-            id
-            author {
-              id
+        query($identifier: String!) {
+          getByID(identifier: "schemaorg/Person/2") {
+            ... on Person {
+              identifier
               name
-            }
-            category
-            citation
-            copyrightHolder {
-              id
-              name
-            }
-            copyrightYear
-            creator {
-              id
-              name
-              affiliation {
-                id
-                name
+              sameAs
+              email
+              url
+              jobTitle
+              description
+              worksFor {
+                ... on Organization {
+                  identifier
+                }
               }
-            }
-            dateCreated
-            dateModified
-            datePublished
-            description
-            distribution
-            exampleOfWork {
-              id
-              name
-            }
-            headline
-            keywords
-            license
-            provider {
-              id
-              name
+              affiliation {
+                ... on Organization {
+                  identifier
+                }
+              }
+              colleague {
+                ... on Person {
+                  identifier
+                }
+              }
+              relatedTo {
+                ... on Person {
+                  identifier
+                }
+              }
             }
           }
         }
       `,
-      { target: target }
+      { identifier: identifier }
     );
   }
 }

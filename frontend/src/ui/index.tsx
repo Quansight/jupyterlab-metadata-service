@@ -5,10 +5,8 @@ import { JupyterFrontEnd, ILabShell } from '@jupyterlab/application';
 import { ICommandPalette, ReactWidget } from '@jupyterlab/apputils';
 
 import { UseSignal } from '@jupyterlab/apputils';
+import { IDocumentManager } from '@jupyterlab/docmanager';
 
-import { IActiveDataset, IConverterRegistry } from '@jupyterlab/databus';
-
-import { IMetadataCommentsService } from '../metadata_iface/comments';
 import { IMetadataDatasetsService } from '../metadata_iface/datasets';
 import { IMetadataPeopleService } from '../metadata_iface/people';
 
@@ -16,32 +14,37 @@ import App from './components/App';
 
 export function activateMetadataUI(
   app: JupyterFrontEnd,
-  activeDataset: IActiveDataset,
   palette: ICommandPalette,
-  comments: IMetadataCommentsService,
   datasets: IMetadataDatasetsService,
   people: IMetadataPeopleService,
   labShell: ILabShell,
-  converters: IConverterRegistry
+  docManager: IDocumentManager
 ): void {
   console.log('JupyterLab extension jupyterlab-metadata-service is activated!');
 
   // Create a single widget
   const widget = ReactWidget.create(
-    <UseSignal signal={activeDataset.signal}>
+    <UseSignal signal={labShell.currentChanged}>
       {(sender, args) => {
-        try {
-          let URL = activeDataset.active.pathname;
-          return (
-            <App
-              target={URL}
-              targetName={URL.split('/').pop()}
-              datasets={datasets}
-            />
-          );
-        } catch {
-          return <App target={''} targetName={''} datasets={datasets} />;
+        if (args) {
+          const current = args.newValue;
+          if (current === null) {
+            return <App target={''} targetName={''} datasets={datasets} />;
+          } else {
+            const context = docManager.contextForWidget(current);
+            if (!context) {
+              return <App target={''} targetName={''} datasets={datasets} />;
+            }
+            return (
+              <App
+                target={context.path}
+                targetName={context.path.split('/').pop()}
+                datasets={datasets}
+              />
+            );
+          }
         }
+        return <App target={''} targetName={''} datasets={datasets} />;
       }}
     </UseSignal>
   );

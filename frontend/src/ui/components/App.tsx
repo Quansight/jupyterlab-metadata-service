@@ -47,7 +47,7 @@ export default class App extends React.Component<IAppProps, IAppStates> {
     super(props);
 
     this.state = {
-      results: { data: { dataset: null } }
+      results: { data: { searchBy: null } }
     };
   }
 
@@ -58,10 +58,8 @@ export default class App extends React.Component<IAppProps, IAppStates> {
     return (
       <div className="jp-metadata-window">
         <Header targetName={this.props.targetName} />
-        {this.state.results.data.dataset !== null ? (
-          this.state.results.data.dataset.id === this.props.target && (
-            <Body data={this.state.results} />
-          )
+        {this.state.results.data.searchBy !== null ? (
+          <Body data={this.state.results} />
         ) : (
           <Body data={undefined} />
         )}
@@ -73,19 +71,26 @@ export default class App extends React.Component<IAppProps, IAppStates> {
    * Called each time component updates
    */
   componentDidUpdate(): void {
-    this.props.datasets.queryById(this.props.target).then((results: any) => {
-      if (this.state.results.data.dataset !== null) {
-        if (this.state.results.data.dataset.id !== results.data.dataset.id) {
+    this.props.datasets.getDataset(this.props.target).then((results: any) => {
+      if (
+        this.state.results &&
+        this.state.results.data &&
+        this.state.results.data.searchBy
+      ) {
+        if (
+          this.state.results.data.searchBy.identifer !==
+          results.data.searchBy.identifer
+        ) {
           this.setState({ results: results });
         }
-      } else {
-        if (results.data.dataset !== null) {
-          this.setState({ results: results });
-        } else {
-          if (this.state.results.data.dataset !== null) {
-            this.setState({ results: { data: { dataset: null } } });
-          }
-        }
+      } else if (results.data && results.data.searchBy) {
+        this.setState({ results: results });
+      } else if (
+        this.state.results &&
+        this.state.results.data &&
+        this.state.results.data.searchBy
+      ) {
+        this.setState({ results: { data: { searchBy: null } } });
       }
     });
   }

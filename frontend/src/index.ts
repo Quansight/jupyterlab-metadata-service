@@ -1,12 +1,8 @@
 import { JupyterFrontEndPlugin, ILabShell } from '@jupyterlab/application';
 import { ICommandPalette } from '@jupyterlab/apputils';
-import { IActiveDataset, IConverterRegistry } from '@jupyterlab/databus';
 
 import { IMetadataApolloGraphQlConnection } from './metadata_iface/apollo_connection';
 import { activateApolloGraphQlConnection } from './metadata_concrete/apollo_connection';
-
-import { IMetadataCommentsService } from './metadata_iface/comments';
-import { activateMetadataComments } from './metadata_concrete/comments';
 
 import { IMetadataPeopleService } from './metadata_iface/people';
 import { activateMetadataPeople } from './metadata_concrete/people';
@@ -14,12 +10,13 @@ import { activateMetadataPeople } from './metadata_concrete/people';
 import { IMetadataDatasetsService } from './metadata_iface/datasets';
 import { activateMetadataDatasets } from './metadata_concrete/datasets';
 
-import { activateMetadataUI } from './ui';
+import { IDocumentManager } from '@jupyterlab/docmanager';
+
+// import { activateMetadataUI } from './ui';
 import { activateMetadataExplore } from './metadata_explorer';
 
 import '../style/index.css';
 
-export { IMetadataCommentsService };
 export { IMetadataDatasetsService };
 export { IMetadataPeopleService };
 export { IMetadataApolloGraphQlConnection };
@@ -35,17 +32,6 @@ const graphqlExtension: JupyterFrontEndPlugin<
   requires: [],
   provides: IMetadataApolloGraphQlConnection,
   activate: activateApolloGraphQlConnection
-};
-
-/**
- * Initialization the extension for querying/posting metadata COMMENTS.
- */
-const commentExtension: JupyterFrontEndPlugin<IMetadataCommentsService> = {
-  id: 'jupyterlab-metadata-service-comments',
-  autoStart: true,
-  requires: [IMetadataApolloGraphQlConnection],
-  provides: IMetadataCommentsService,
-  activate: activateMetadataComments
 };
 
 /**
@@ -73,32 +59,28 @@ const datasetExtension: JupyterFrontEndPlugin<IMetadataDatasetsService> = {
 /**
  * Initialization the metadata UI extension.
  */
-const uiExtension: JupyterFrontEndPlugin<void> = {
-  id: 'jupyterlab-metadata-service-ui',
-  autoStart: true,
-  requires: [
-    IActiveDataset,
-    ICommandPalette,
-    IMetadataCommentsService,
-    IMetadataDatasetsService,
-    IMetadataPeopleService,
-    ILabShell,
-    IConverterRegistry
-  ],
-  activate: activateMetadataUI
-};
+// const uiExtension: JupyterFrontEndPlugin<void> = {
+//   id: 'jupyterlab-metadata-service-ui',
+//   autoStart: true,
+//   requires: [
+//     ICommandPalette,
+//     IMetadataDatasetsService,
+//     IMetadataPeopleService,
+//     ILabShell,
+//     IDocumentManager
+//   ],
+//   activate: activateMetadataUI
+// };
 
 const metadataExplore: JupyterFrontEndPlugin<void> = {
   id: 'jupyterlab-metadata-explorer-ui',
   autoStart: true,
   requires: [
-    IActiveDataset,
     ICommandPalette,
-    IMetadataCommentsService,
     IMetadataDatasetsService,
     IMetadataPeopleService,
     ILabShell,
-    IConverterRegistry
+    IDocumentManager
   ],
   activate: activateMetadataExplore
 };
@@ -108,10 +90,9 @@ const metadataExplore: JupyterFrontEndPlugin<void> = {
  */
 const plugins: JupyterFrontEndPlugin<any>[] = [
   graphqlExtension,
-  commentExtension,
   peopleExtension,
   datasetExtension,
-  uiExtension,
+  // uiExtension,
   metadataExplore
 ];
 

@@ -2,7 +2,11 @@
   "compilerOptions": {
     "declaration": true,
     "jsx": "react",
-    "lib": ["es2015", "dom", "esnext.asynciterable"],
+    "lib": [
+      "es2015",
+      "dom",
+      "esnext.asynciterable"
+    ],
     "module": "commonjs",
     "moduleResolution": "node",
     "noEmitOnError": true,
@@ -45,7 +49,7 @@
       "path": "../coreutils"
     },
     {
-      "path": "../databus"
+      "path": "../docmanager"
     },
     {
       "path": "../docregistry"
@@ -55,6 +59,12 @@
     },
     {
       "path": "../mainmenu"
+    },
+    {
+      "path": "../cells"
+    },
+    {
+      "path": "../notebook"
     }
   ]
 }

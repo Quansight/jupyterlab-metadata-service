@@ -15,6 +15,6 @@ export interface IMetadataDatasetsService {
    * In the future, `target` may represent
    * things other than a file.
    */
-  queryById(id: String): Promise<{}>;
-  queryByTarget(target: String): Promise<{}>;
+  getDataset(path: String): Promise<{}>;
+  getPerson(identifier: String): Promise<{}>;
 }
